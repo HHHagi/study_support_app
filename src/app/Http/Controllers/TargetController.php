@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 
 use App\Models\Target;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class TargetController extends Controller
 {
+    // ログインしてなければログイン画面へ飛ばす
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +45,12 @@ class TargetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $targets = new Target;
+        $form  = $request->all();
+        $targets->fill($form);
+        $targets->user_id = Auth::user()->id;
+        $targets->save();
+        return redirect('/targets');
     }
 
     /**

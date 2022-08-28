@@ -26,6 +26,10 @@ article{
     margin-bottom: 10px;
 }
 
+a{
+  margin-bottom: 10px; 
+}
+
 textarea{
     width: 100%;
 }
@@ -54,4 +58,12 @@ a.btn--blue:hover {
 
 .toggle-form {
     display: none;
+}
+
+.frame {
+ display: flex;
+}
+
+.buttons{
+  margin-left: auto;
 }

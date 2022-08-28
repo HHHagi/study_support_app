@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Target;
+use App\Models\Idea;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class TargetController extends Controller
+class IdeaController extends Controller
 {
-    // ログインしてなければログイン画面へ飛ばす
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,9 +21,7 @@ class TargetController extends Controller
      */
     public function index()
     {
-        $targets = Target::all();
-        $users = User::all();
-        return view('contents_views.targets', compact('targets', 'users'));
+        //
     }
 
     /**
@@ -45,11 +42,11 @@ class TargetController extends Controller
      */
     public function store(Request $request)
     {
-        $targets = new Target;
+        $ideas = new Idea;
         $form  = $request->all();
-        $targets->fill($form);
-        $targets->user_id = Auth::user()->id;
-        $targets->save();
+        $ideas->fill($form);
+        $ideas->user_id = Auth::user()->id;
+        $ideas->save();
         return redirect('/targets');
     }
 
@@ -84,10 +81,7 @@ class TargetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $target = Target::find($id);
-        $form  = $request->all();
-        $target->update($form);
-        return redirect('/targets');
+        //
     }
 
     /**

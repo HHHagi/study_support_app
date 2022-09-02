@@ -3,9 +3,23 @@
 
 @section('content')
     <section>
-        <button type="button" onclick="" data-create="" class="toggle_target_form">新しい目標をつくる</button>
-        <button type="button" onclick="">カテゴリ</button>
-        <button type="button" onclick="">すべて</button>
+        <button type="button" class="toggle_target_form">新しい目標をつくる</button>
+        <button type="button" >公式カテゴリ</button>
+        <button type="button" >マイカテゴリ</button>
+        <button type="button" >すべて</button>
+        <button type="button"  class="toggle_private_category_form">マイカテゴリを作成</button>
+        <div class="toggle-form toggle_private_category">
+            <form method="post" action="{{ route('private_categories.store') }}">
+                @csrf
+                <label>新規マイカテゴリ名</label><br>
+                @error('title')
+                    <li>{{ $message }}</li>
+                @enderror
+                <input name="category">
+                <button type="submit">作成</button>
+            </form>
+
+        </div>
         {{-- 目標の入力フォーム --}}
         <div class="toggle-form toggle_target">
             <form method="post" action="{{ route('targets.store') }}">
@@ -15,54 +29,60 @@
                     <li>{{ $message }}</li>
                 @enderror
                 <textarea name="title"></textarea><br>
+
                 <label>一般カテゴリ</label>
                 @error('public_category_id')
                     <li>{{ $message }}</li>
                 @enderror
                 <select name="public_category_id">
-                    <option value=1>なんでも</option>
-                    <option value=2>心理</option>
-                    <option value=3>数学</option>
+                    @foreach ($public_categories as $public_category)
+                        <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
+                    @endforeach
                 </select><br>
+
                 <label>マイカテゴリ</label>
                 @error('private_category_id')
                     <li>{{ $message }}</li>
                 @enderror
                 <select name="private_category_id">
-                    <option value=1>なんでも</option>
-                    <option value=2>心理</option>
-                    <option value=3>数学</option>
+                    @foreach ($private_categories as $private_category)
+                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                    @endforeach
                 </select><br>
+
                 <label>目標期限</label>
                 @error('limit')
                     <li>{{ $message }}</li>
                 @enderror
                 <input name="limit" type="date"><br>
+
                 <label>公開</label>
                 @error('public')
                     <li>{{ $message }}</li>
                 @enderror
+                <input type="hidden" name="is_private" value="0"> <br>
                 <input type="checkbox" name="is_private" value="1"> <br>
+
                 <input type="submit">
             </form>
         </div>
 
         @if ($targets->isEmpty())
-            {{-- 記事データがDBにない場合の表示内 --}}
+            {{-- 目標データがDBにない場合の表示内 --}}
             <article>
                 まだ目標がありません
             </article>
         @else
-            {{-- 記事データがDBにある場合の表示内容 --}}
+            {{-- 目標データがDBにある場合の表示内容 --}}
             @foreach ($targets as $target)
                 {{-- @if ($target->user_id === Auth::user()->id) --}}
                 <article>
                     {{-- <p>投稿者：{{ $target->user->name }}</p> --}}
                     <div class="frame">
                         @if ($target->is_done === 1)
-                        <span><i class="fa-solid fa-square-check"></i></span>
+                            <span><i class="fa-solid fa-square-check"></i></span>
                         @else
-                        <span><i class="fa-solid fa-square-full"></i></span>
+                            <span><i class="fa-solid fa-square-full"></i></span>
                         @endif
                         <span>{{ $target->title }}</span>
                         <div class="buttons">
@@ -70,15 +90,15 @@
                                 @csrf
                                 @method('PUT')
                                 @if ($target->is_done === 1)
-                                <button type="submit" name="is_done" value="0" class="btn">復習</button>
+                                    <button type="submit" name="is_done" value="0" class="btn">復習</button>
                                 @else
-                                <button type="submit" name="is_done" value="1" class="btn">完了</button>
+                                    <button type="submit" name="is_done" value="1" class="btn">完了</button>
                                 @endif
                             </form>
                         </div>
                         <div class=""><button class="btn toggle_memo_form">メモ</button></div>
                         <div class="">
-                            <a href="{{ url('targets/' . $target->id . '/edit') }}" class="btn btn--blue">編集</a>
+                            <button class="btn btn--blue toggle_target_edit_form">編集</button>
                         </div>
                         <div class="">
                             <form style="display: inline-block;" method="post"
@@ -87,6 +107,9 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn--orange">削除</button>
                             </form>
+                        </div>
+                        <div>
+                            {{ $target->limit->format('Y/m/d') }}まで
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
@@ -101,6 +124,54 @@
                             <input type="submit" value="メモを追加・編集">
                         </form>
                     </div>
+
+                            {{-- 目標の編集フォーム --}}
+        <div class="toggle-form toggle_target">
+            <form method="post" action="{{ route('targets.update', $target->id) }}">
+                @csrf
+                @method('PUT')
+                <label>目標</label><br>
+                @error('title')
+                    <li>{{ $message }}</li>
+                @enderror
+                <textarea name="title">{{ old('title') ?: $target->title}}</textarea><br>
+
+                <label>一般カテゴリ</label>
+                @error('public_category_id')
+                    <li>{{ $message }}</li>
+                @enderror
+                <select name="public_category_id">
+                    @foreach ($public_categories as $public_category)
+                        <option value="{{ $public_category->id }}" @if($public_category->id === $target->public_category_id) selected @endif>{{ $public_category->category }}</option>
+                    @endforeach
+                </select><br>
+
+                <label>マイカテゴリ</label>
+                @error('private_category_id')
+                    <li>{{ $message }}</li>
+                @enderror
+                <select name="private_category_id">
+                    @foreach ($private_categories as $private_category)
+                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                    @endforeach
+                </select><br>
+
+                <label>目標期限</label>
+                @error('limit')
+                    <li>{{ $message }}</li>
+                @enderror
+                <input name="limit" type="date" value="{{$target->limit->format('Y-m-d')}}"><br>
+
+                <label>公開</label>
+                @error('public')
+                    <li>{{ $message }}</li>
+                @enderror
+                <input type="hidden" name="is_private" value="0"> <br>
+                <input type="checkbox" name="is_private" value="1"> <br>
+
+                <button type="submit">編集完了</button>
+            </form>
+        </div>
 
                     {{-- @endif --}}
                     {{-- 以下はいいね機能 --}}
@@ -131,6 +202,28 @@
                 <input type="submit">
             </form>
         </div>
+        @if ($ideas->isEmpty())
+            {{-- 考察データがDBにない場合 --}}
+            <article>
+                まだ目標がありません
+            </article>
+        @else
+            {{-- 考察データがDBにある場合 --}}
+            @foreach ($ideas as $idea)
+                <article>
+                    <div class="frame">
+                        <span>{{ $idea->idea }}</span>
+                        <div class="buttons">
+                            <a href="{{ url('ideas/' . $idea->id . '/edit') }}" class="btn btn--blue">編集</a>
+                            <form style="display: inline-block;" method="post"
+                                action="{{ route('ideas.destroy', $idea->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn--orange">削除</button>
+                            </form>
+                        </div>
+                    </div>
+            @endforeach
+        @endif
     </section>
-
 @endsection

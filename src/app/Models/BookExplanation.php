@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Public_category extends Model
+class BookExplanation extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];

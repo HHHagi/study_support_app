@@ -28,3 +28,14 @@ $(function() {
     });
 });
 
+$(function() {
+    $('.toggle_target_edit_form').click(function() {
+        $(this).parent().parent().nextAll('.toggle_target').slideToggle();
+    });
+});
+
+$(function() {
+    $('.toggle_private_category_form').click(function() {
+        $(this).nextAll('.toggle_private_category').slideToggle();
+    });
+});

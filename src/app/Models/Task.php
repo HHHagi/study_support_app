@@ -16,6 +16,6 @@ class Task extends Model
     }    
     public function task_explanations()
     {
-        return $this->hasMany(Task_explanation::class);
+        return $this->hasMany(TaskExplanation::class);
     }
 }

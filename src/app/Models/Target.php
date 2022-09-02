@@ -11,6 +11,8 @@ class Target extends Model
 
     protected $guarded = ['id'];
 
+    protected $dates = ['limit'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -29,10 +31,10 @@ class Target extends Model
     }
     public function public_categories()
     {
-        return $this->hasOne(Public_category::class);
+        return $this->hasOne(PublicCategory::class);
     }
     public function private_categories()
     {
-        return $this->hasOne(Private_category::class);
+        return $this->hasOne(PrivateCategory::class);
     }
 }

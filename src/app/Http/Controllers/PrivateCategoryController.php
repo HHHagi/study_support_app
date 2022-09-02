@@ -4,20 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Target;
+use App\Models\PrivateCategory;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Idea;
-use App\Models\PrivateCategory;
-use App\Models\PublicCategory;
 
-class TargetController extends Controller
+class PrivateCategoryController extends Controller
 {
-    // ログインしてなければログイン画面へ飛ばす
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -25,12 +17,7 @@ class TargetController extends Controller
      */
     public function index()
     {
-        $targets = Target::all();
-        $users = User::all();
-        $ideas = Idea::all();
-        $private_categories= PrivateCategory::all();
-        $public_categories= PublicCategory::all();
-        return view('contents_views.targets', compact('targets', 'users', 'ideas', 'private_categories', 'public_categories'));
+        //
     }
 
     /**
@@ -51,11 +38,11 @@ class TargetController extends Controller
      */
     public function store(Request $request)
     {
-        $targets = new Target;
+        $private_categories = new PrivateCategory;
         $form  = $request->all();
-        $targets->fill($form);
-        $targets->user_id = Auth::user()->id;
-        $targets->save();
+        $private_categories->fill($form);
+        $private_categories->user_id = Auth::user()->id;
+        $private_categories->save();
         return redirect('/targets');
     }
 
@@ -90,10 +77,7 @@ class TargetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $target = Target::find($id);
-        $form  = $request->all();
-        $target->update($form);
-        return redirect('/targets');
+        //
     }
 
     /**

@@ -3,16 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreIdeaRequest;
-use App\Http\Requests\UpdateIdeaRequest;
 
-use App\Models\Idea;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-
-class IdeaController extends Controller
+class TaskController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -39,14 +32,9 @@ class IdeaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreIdeaRequest $request)
+    public function store(Request $request)
     {
-        $ideas = new Idea;
-        $form  = $request->all();
-        $ideas->fill($form);
-        $ideas->user_id = Auth::user()->id;
-        $ideas->save();
-        return redirect('/targets');
+        //
     }
 
     /**
@@ -78,12 +66,9 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateIdeaRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $idea = Idea::find($id);
-        $form  = $request->all();
-        $idea->update($form);
-        return redirect('/targets'); 
+        //
     }
 
     /**
@@ -94,8 +79,6 @@ class IdeaController extends Controller
      */
     public function destroy($id)
     {
-        $idea = Idea::find($id);
-        $idea->delete(); 
-        return redirect('/targets'); 
+        //
     }
 }

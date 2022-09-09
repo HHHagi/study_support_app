@@ -9,6 +9,11 @@ class PrivateCategory extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 }
 
 // 最初privateになってたから注意！

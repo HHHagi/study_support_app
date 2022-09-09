@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTargetRequest;
+use App\Http\Requests\UpdateTargetRequest;
+use App\Http\Requests\StoreUpdateMemoRequest;
 
 use App\Models\Target;
 use App\Models\User;
@@ -49,7 +52,7 @@ class TargetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTargetRequest $request)
     {
         $targets = new Target;
         $form  = $request->all();
@@ -78,7 +81,10 @@ class TargetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $target = Target::find($id);
+        $private_categories= PrivateCategory::all();
+        $ideas = Idea::all();
+        return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas'));
     }
 
     /**
@@ -88,7 +94,7 @@ class TargetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTargetRequest $request, $id)
     {
         $target = Target::find($id);
         $form  = $request->all();
@@ -104,6 +110,8 @@ class TargetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $target = Target::find($id);
+        $target->delete();
+        return redirect('/targets');
     }
 }

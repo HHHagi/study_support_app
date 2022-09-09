@@ -18,4 +18,8 @@ class Book extends Model
     {
         return $this->hasMany(BookExplanation::class);
     }
+    public function public_categories()
+    {
+        return $this->hasOne(PublicCategory::class);
+    }
 }

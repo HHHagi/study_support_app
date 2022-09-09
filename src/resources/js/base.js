@@ -39,3 +39,21 @@ $(function() {
         $(this).nextAll('.toggle_private_category').slideToggle();
     });
 });
+
+$(function() {
+    $('.toggle_idea_edit_form').click(function() {
+        $(this).parent().parent().nextAll('.toggle_idea').slideToggle();
+    });
+});
+
+$(function(){
+    $(".btn_delete").click(function(){
+    if(confirm("本当に削除しますか？")){
+    //そのままsubmit（削除）
+    }else{
+    //cancel
+    return false;
+    }
+    });
+    });
+

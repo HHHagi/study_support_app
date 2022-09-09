@@ -25,3 +25,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('targets', 'App\Http\Controllers\TargetController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('ideas', 'App\Http\Controllers\IdeaController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('private_categories', 'App\Http\Controllers\PrivateCategoryController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
+Route::resource('books', 'App\Http\Controllers\BookController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
+Route::resource('tasks', 'App\Http\Controllers\TaskController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);

@@ -18,4 +18,8 @@ class Task extends Model
     {
         return $this->hasMany(TaskExplanation::class);
     }
+    public function public_categories()
+    {
+        return $this->hasOne(PublicCategory::class);
+    }
 }

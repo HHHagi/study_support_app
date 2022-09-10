@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Task;
+
 class TaskController extends Controller
 {
     /**
@@ -34,7 +36,11 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tasks = new Task;
+        $form  = $request->all();
+        $tasks->fill($form);
+        $tasks->save();
+        return back();
     }
 
     /**
@@ -68,7 +74,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $task = Task::find($id);
+        $form  = $request->all();
+        $task->update($form);
+        return back();
     }
 
     /**
@@ -79,6 +88,8 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $task = Task::find($id);
+        $task->delete();
+        return back();
     }
 }

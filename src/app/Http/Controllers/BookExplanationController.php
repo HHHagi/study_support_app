@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BookExplanation;
 use Illuminate\Http\Request;
 
-use App\Models\Book;
-
-class BookController extends Controller
+class BookExplanationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,10 +35,10 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $books = new Book;
+        $book_explanations = new BookExplanation;
         $form  = $request->all();
-        $books->fill($form);
-        $books->save();
+        $book_explanations->fill($form);
+        $book_explanations->save();
         return back();
     }
 
@@ -74,9 +73,9 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $book = Book::find($id);
+        $book_explanation = BookExplanation::find($id);
         $form  = $request->all();
-        $book->update($form);
+        $book_explanation->update($form);
         return back();
     }
 
@@ -88,7 +87,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $book = Book::find($id);
+        $book = BookExplanation::find($id);
         $book->delete();
         return back();
     }

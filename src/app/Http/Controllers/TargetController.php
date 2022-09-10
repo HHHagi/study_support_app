@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Idea;
 use App\Models\PrivateCategory;
 use App\Models\PublicCategory;
+use App\Models\Book;
+use App\Models\Task;
+use App\Models\BookExplanation;
+use App\Models\TaskExplanation;
 
 class TargetController extends Controller
 {
@@ -28,12 +32,12 @@ class TargetController extends Controller
      */
     public function index()
     {
-        $targets = Target::all();
-        $users = User::all();
-        $ideas = Idea::all();
-        $private_categories= PrivateCategory::all();
+        $user_id = Auth::user()->id;
+        $targets = Target::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        $private_categories= PrivateCategory::where('user_id', $user_id)->get();
         $public_categories= PublicCategory::all();
-        return view('contents_views.targets', compact('targets', 'users', 'ideas', 'private_categories', 'public_categories'));
+        return view('contents_views.targets', compact('targets', 'ideas', 'private_categories', 'public_categories'));
     }
 
     /**
@@ -81,10 +85,15 @@ class TargetController extends Controller
      */
     public function edit($id)
     {
+        $user_id = Auth::user()->id;
         $target = Target::find($id);
         $private_categories= PrivateCategory::all();
-        $ideas = Idea::all();
-        return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas'));
+        $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
+        $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
+        $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
+        $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
+        return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas', 'books', 'tasks', 'book_explanations', 'task_explanations'));
     }
 
     /**

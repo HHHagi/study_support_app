@@ -163,11 +163,14 @@
                             </select><br>
 
                             <label>目標期限</label>
+                             @if($target->limit)
+                            期限なし
+                            @else
                             @error('limit')
                                 <li>{{ $message }}</li>
                             @enderror
-                            <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br>
-
+                            {{-- <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br> --}}
+                             @endif
                             <label>公開</label>
                             @error('public')
                                 <li>{{ $message }}</li>

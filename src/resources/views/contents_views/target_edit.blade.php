@@ -7,6 +7,27 @@
         <button type="button" class="toggle_target_form">新しいインプット</button>
         <button type="button" class="toggle_task_form">新しいアウトプット</button>
         <button type="button">マイカテゴリ</button>
+        <div>
+            <form class="form_sort_private_category">
+                <select name="private_category_id" class="sort_private_category">
+                    <option hidden>マイカテゴリーを選択</option>
+                    <option value="">すべて</option>
+                    @foreach ($private_categories as $private_category)
+                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                    @endforeach
+                </select><br>
+            </form>
+        </div>
+        <form class="form_sort_is_done">
+            <select name="is_done" class="sort_is_done">
+                <option hidden>未完了or完了</option>
+                <option value="0">未完了</option>
+                <option value="1">完了</option>
+                {{-- @foreach ($private_categories as $private_category)
+                    <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                @endforeach --}}
+            </select><br>
+        </form>
         <button type="button">未完了</button>
         <button type="button">重要度</button>
         <button type="button">すべて</button>
@@ -28,6 +49,7 @@
             <form method="post" action="{{ route('books.store') }}">
                 @csrf
                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                <input type="hidden" name="is_done" value="0"><br>
 
                 <label>インプットしたい内容</label><br>
                 @error('title')
@@ -46,8 +68,8 @@
                         @foreach ($private_categories as $private_category)
                             <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
                         @endforeach
+                    </select><br>
                 @endif
-                </select><br>
 
                 <label>今知っていること</label><br>
                 @error('first_knowledge')
@@ -211,7 +233,7 @@
                             <select name="private_category_id">
                                 @foreach ($private_categories as $private_category)
                                     <option value="{{ $private_category->id }}"
-                                        @if ($private_category->id === $target->private_category_id) selected @endif>{{ $private_category->category }}
+                                        @if ($private_category->id === $book->private_category_id) selected @endif>{{ $private_category->category }}
                                     </option>
                                 @endforeach
                             </select><br>
@@ -248,6 +270,7 @@
                             @enderror
                             <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             <input type="hidden" name="book_id" value="{{ $book->id }}"><br>
+                            <input type="hidden" name="is_done" value="1"><br>
                             <textarea name="content">{{ old('title') }}</textarea><br>
                             <button type="submit">完了</button>
                         </form>

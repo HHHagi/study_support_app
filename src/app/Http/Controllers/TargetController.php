@@ -35,8 +35,8 @@ class TargetController extends Controller
         $user_id = Auth::user()->id;
         $targets = Target::where('user_id', $user_id)->orderBy('id', 'desc')->get();
         $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
-        $private_categories= PrivateCategory::where('user_id', $user_id)->get();
-        $public_categories= PublicCategory::all();
+        $private_categories = PrivateCategory::where('user_id', $user_id)->get();
+        $public_categories = PublicCategory::all();
         return view('contents_views.targets', compact('targets', 'ideas', 'private_categories', 'public_categories'));
     }
 
@@ -83,14 +83,26 @@ class TargetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $user_id = Auth::user()->id;
         $target = Target::find($id);
-        $private_categories= PrivateCategory::all();
+        $private_categories = PrivateCategory::all();
         $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
-        $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
-        $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
+        if ($request->private_category_id) {
+            $select = $request->private_category_id;
+            $books = Book::where('target_id', $id)->where('private_category_id', $select)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->where('private_category_id', $select)->orderBy('id', 'desc')->get();
+
+            if ($request->is_done) {
+                $select = $request->is_done;
+                $books = $books::where('is_done', $select)->orderBy('id', 'desc')->get();
+                $tasks = $tasks::where('is_done', $select)->orderBy('id', 'desc')->get();
+            }
+        } else {
+            $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
+        }
         $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas', 'books', 'tasks', 'book_explanations', 'task_explanations'));

@@ -13,6 +13,22 @@ class Target extends Model
 
     protected $dates = ['limit'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // static::deleting(function ($target) {
+        //     $target->books()->delete();
+        //     $target->tasks()->delete();
+        // });
+
+        static::deleting(function($target) {
+            foreach ($target->books()->get() as $book) {
+                $book->delete();
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

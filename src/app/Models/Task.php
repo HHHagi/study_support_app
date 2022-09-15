@@ -10,6 +10,15 @@ class Task extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($task) {
+            $task->task_explanations()->delete();
+        });
+    }
+
     public function targets()
     {
         return $this->belongsTo(Target::class);

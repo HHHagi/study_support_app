@@ -3,7 +3,8 @@
 
 @section('content')
     <section>
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">戻る</button>
+        <h2>目標：{{ $target->title }}</h2>
+        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
         <button type="button" class="toggle_target_form">新しいインプット</button>
         <button type="button" class="toggle_task_form">新しいアウトプット</button>
         <button type="button">マイカテゴリ</button>
@@ -167,18 +168,18 @@
                 <article>
                     <div class="frame">
                         @if (DB::table('book_explanations')->where('id', $book->id)->exists())
-                            <span><i class="fa-solid fa-square-full"></i></span>
-                        @else
                             <span><i class="fa-solid fa-square-check"></i></span>
+                        @else
+                            <span><i class="fa-solid fa-square-full"></i></span>
                         @endif
                         <span>{{ $book->title }}</span>
 
                         <div class="buttons">
                             <button class="btn toggle_done_form">
                                 @if (DB::table('book_explanations')->where('id', $book->id)->exists())
-                                    完了
-                                @else
                                     復習
+                                @else
+                                    完了
                                 @endif
                             </button>
                         </div>
@@ -421,6 +422,56 @@
                             <button type="submit">編集完了</button>
                         </form>
                     </div>
+
+                    {{-- 完了フォーム --}}
+                    <div class="toggle-form toggle_done">
+                        <form method="post" action="{{ route('task_explanations.store') }}">
+                            @csrf
+                            @method('POST')
+
+                            <label>学んだ内容を説明すると</label>
+                            @error('content')
+                                <li>{{ $message }}</li>
+                            @enderror
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                            <input type="hidden" name="book_id" value="{{ $book->id }}"><br>
+                            <input type="hidden" name="is_done" value="1"><br>
+                            <textarea name="content">{{ old('title') }}</textarea><br>
+                            <button type="submit">完了</button>
+                        </form>
+
+
+                        @foreach ($task_explanations as $task_explanation)
+                            @if ($task_explanation->book_id === $task->id)
+                                @if ($loop->index == 0)
+                                    これまで学んだこと
+                                @endif
+                                <div class="frame">
+                                    <li>{{ $task_explanation->content }}</li><br>
+                                    <div class="buttons">
+                                        <button class="btn btn--blue toggle_book_edit_form">編集</button>
+                                    </div>
+                                    <div class="">
+                                        <form style="display: inline-block;" method="post"
+                                            action="{{ route('tasks.destroy', $task->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn--orange btn_delete">削除</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+                            {{-- 編集フォーム --}}
+                            <div class="toggle-form toggle_book">
+                                <form method="post"
+                                    action="{{ route('book_explanations.update', $book_explanation->id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <textarea name="content" class="">{{ old('title') ?: $book_explanation->content }}</textarea><br>
+                                    <button type="submit">編集を完了</button>
+                                </form>
+                            </div>
+                        @endforeach
 
                 </article>
             @endforeach

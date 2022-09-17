@@ -167,7 +167,7 @@
             @foreach ($books as $book)
                 <article>
                     <div class="frame">
-                        @if (DB::table('book_explanations')->where('id', $book->id)->exists())
+                        @if (DB::table('book_explanations')->where('book_id', $book->id)->exists())
                             <span><i class="fa-solid fa-square-check"></i></span>
                         @else
                             <span><i class="fa-solid fa-square-full"></i></span>
@@ -176,7 +176,7 @@
 
                         <div class="buttons">
                             <button class="btn toggle_done_form">
-                                @if (DB::table('book_explanations')->where('id', $book->id)->exists())
+                                @if (DB::table('book_explanations')->where('book_id', $book->id)->exists())
                                     復習
                                 @else
                                     完了
@@ -259,7 +259,7 @@
                         </form>
                     </div>
 
-                    {{-- 完了フォーム --}}
+                    {{-- 完了の入力フォーム --}}
                     <div class="toggle-form toggle_done">
                         <form method="post" action="{{ route('book_explanations.store') }}">
                             @csrf
@@ -330,23 +330,23 @@
             @foreach ($tasks as $task)
                 <article>
                     <div class="frame">
-                        @if ($task->is_done === 1)
+                        @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
                             <span><i class="fa-solid fa-square-check"></i></span>
                         @else
                             <span><i class="fa-solid fa-square-full"></i></span>
                         @endif
                         <span>{{ $task->title }}</span>
+                        {{-- 編集中 --}}
                         <div class="buttons">
-                            <form method="post" action="{{ route('tasks.update', $task->id) }}">
-                                @csrf
-                                @method('PUT')
-                                @if ($task->is_done === 1)
-                                    <button type="submit" name="is_done" value="0" class="btn">復習</button>
+                            <button class="btn toggle_done_form">
+                                @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
+                                    復習
                                 @else
-                                    <button type="submit" name="is_done" value="1" class="btn">完了</button>
+                                    完了
                                 @endif
-                            </form>
+                            </button>
                         </div>
+
                         <div class=""><button class="btn toggle_memo_form">メモ</button></div>
                         <div class="">
                             <button class="btn btn--blue toggle_target_edit_form">編集</button>
@@ -434,7 +434,7 @@
                                 <li>{{ $message }}</li>
                             @enderror
                             <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            <input type="hidden" name="book_id" value="{{ $book->id }}"><br>
+                            <input type="hidden" name="task_id" value="{{ $task->id }}"><br>
                             <input type="hidden" name="is_done" value="1"><br>
                             <textarea name="content">{{ old('title') }}</textarea><br>
                             <button type="submit">完了</button>
@@ -442,7 +442,7 @@
 
 
                         @foreach ($task_explanations as $task_explanation)
-                            @if ($task_explanation->book_id === $task->id)
+                            @if ($task_explanation->task_id === $task->id)
                                 @if ($loop->index == 0)
                                     これまで学んだこと
                                 @endif
@@ -461,13 +461,13 @@
                                     </div>
                                 </div>
                             @endif
-                            {{-- 編集フォーム --}}
+                            {{-- 編集フォーム？ --}}
                             <div class="toggle-form toggle_book">
                                 <form method="post"
-                                    action="{{ route('book_explanations.update', $book_explanation->id) }}">
+                                    action="{{ route('task_explanations.update', $task_explanation->id) }}">
                                     @csrf
                                     @method('PUT')
-                                    <textarea name="content" class="">{{ old('title') ?: $book_explanation->content }}</textarea><br>
+                                    <textarea name="content" class="">{{ old('title') ?: $task_explanation->content }}</textarea><br>
                                     <button type="submit">編集を完了</button>
                                 </form>
                             </div>

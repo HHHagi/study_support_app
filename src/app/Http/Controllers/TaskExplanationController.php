@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TaskExplanation;
 use Illuminate\Http\Request;
 
 class TaskExplanationController extends Controller
@@ -34,7 +35,11 @@ class TaskExplanationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task_explanations = new TaskExplanation;
+        $form  = $request->all();
+        $task_explanations->fill($form);
+        $task_explanations->save();
+        return back();
     }
 
     /**
@@ -68,7 +73,10 @@ class TaskExplanationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $task_explanation = TaskExplanation::find($id);
+        $form  = $request->all();
+        $task_explanation->update($form);
+        return back();
     }
 
     /**

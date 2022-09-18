@@ -14,8 +14,14 @@ class Task extends Model
     {
         parent::boot();
 
-        static::deleting(function ($task) {
-            $task->task_explanations()->delete();
+        // static::deleting(function ($book) {
+        //     $book->book_explanations()->delete();
+        // });
+
+        static::deleting(function($task) {
+            foreach ($task->task_explanations()->get() as $task_explanation) {
+                $task_explanation->delete();
+            }
         });
     }
 

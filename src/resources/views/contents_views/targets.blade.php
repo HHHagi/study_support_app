@@ -85,6 +85,7 @@
                         @endif
                         <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
                         <div class="buttons">
+{{-- エラー箇所！ --}}
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
@@ -202,6 +203,8 @@
         @endif
     </section>
     <section>
+        
+{{-- エラー箇所！バリデーションを設定すること --}}
         <button type="button" onclick="" class="create toggle_idea_form">考察を追加</button>
         <div class="toggle-form toggle_idea">
             <form method="post" action="{{ route('ideas.store') }}">

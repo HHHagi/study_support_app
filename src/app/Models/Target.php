@@ -21,10 +21,16 @@ class Target extends Model
         //     $target->books()->delete();
         //     $target->tasks()->delete();
         // });
-
+// ？？
         static::deleting(function($target) {
             foreach ($target->books()->get() as $book) {
                 $book->delete();
+            }
+        });
+
+        static::deleting(function($target) {
+            foreach ($target->tasks()->get() as $task) {
+                $task->delete();
             }
         });
     }

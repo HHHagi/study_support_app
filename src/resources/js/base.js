@@ -85,3 +85,9 @@ $(function() {
         $('.form_sort_is_done').submit();
     });
 });
+
+$(function () {
+    $('.toggle_sort_form').click(function () {
+        $(this).nextAll('.sort_form').slideToggle();
+    });
+});

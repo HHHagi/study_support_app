@@ -43,7 +43,7 @@ class PrivateCategoryController extends Controller
         $private_categories->fill($form);
         $private_categories->user_id = Auth::user()->id;
         $private_categories->save();
-        return redirect('/targets');
+        return back();
     }
 
     /**

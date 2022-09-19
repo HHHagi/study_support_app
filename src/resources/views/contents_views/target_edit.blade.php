@@ -7,35 +7,11 @@
         <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
         <button type="button" class="toggle_target_form">新しいインプット</button>
         <button type="button" class="toggle_task_form">新しいアウトプット</button>
-        <button type="button">マイカテゴリ</button>
-        <div>
-            <form class="form_sort_private_category">
-                <select name="private_category_id" class="sort_private_category">
-                    <option hidden>マイカテゴリーを選択</option>
-                    <option value="">すべて</option>
-                    @foreach ($private_categories as $private_category)
-                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
-                    @endforeach
-                </select><br>
-            </form>
-        </div>
-        <form class="form_sort_is_done">
-            <select name="is_done" class="sort_is_done">
-                <option hidden>未完了or完了</option>
-                <option value="0">未完了</option>
-                <option value="1">完了</option>
-                {{-- @foreach ($private_categories as $private_category)
-                    <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
-                @endforeach --}}
-            </select><br>
-        </form>
-        <button type="button">未完了</button>
-        <button type="button">重要度</button>
-        <button type="button">すべて</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
         <div class="toggle-form toggle_private_category">
             <form method="post" action="{{ route('private_categories.store') }}">
                 @csrf
+                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                 <label>新規マイカテゴリ名</label><br>
                 @error('title')
                     <li>{{ $message }}</li>
@@ -43,8 +19,45 @@
                 <input name="category">
                 <button type="submit">作成</button>
             </form>
-
         </div>
+        <button type="button" class="toggle_sort_form">ソート</button>
+        {{-- ソートするフォーム --}}
+        <div class="sort_form">
+            <form method="post" action="{{ route('targets.edit', $target->id) }}">
+                @csrf
+                @method('GET')
+                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                <div class="sort-item">
+                    {{-- <form class="form_sort_private_category"> --}}
+                    <select name="private_category_id" class="sort_private_category">
+                        <option hidden>マイカテゴリーを選択</option>
+                        <option value="">すべて</option>
+                        @foreach ($private_categories as $private_category)
+                            <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                        @endforeach
+                    </select><br>
+                    {{-- </form> --}}
+                </div>
+                <div class="sort-item">
+                    {{-- <form class="form_sort_is_done"> --}}
+                    <select name="is_done" class="sort_is_done">
+                        <option hidden>未完了or完了</option>
+                        <option value="0">未完了</option>
+                        <option value="1">完了</option>
+                    </select><br>
+                    {{-- </form> --}}
+                </div>
+                <div class="sort-item">
+                    <button type="button">重要度</button>
+                </div>
+                <div class="sort-item">
+                    <button type="button">すべて</button>
+                </div>
+                <button type="submit">ソートを完了</button>
+            </form>
+        </div>
+
+
         {{-- インプットの入力フォーム --}}
         <div class="toggle-form toggle_target">
             <form method="post" action="{{ route('books.store') }}">
@@ -103,6 +116,7 @@
             <form method="post" action="{{ route('tasks.store') }}">
                 @csrf
                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                <input type="hidden" name="is_done" value="0"><br>
 
                 <label>アウトプットしたい内容</label><br>
                 @error('title')
@@ -189,9 +203,10 @@
                             <button class="btn btn--blue toggle_target_edit_form">編集</button>
                         </div>
                         <div class="">
-                            <form style="display: inline-block;" method="post"
+                            <form style="display: inline;" method="post"
                                 action="{{ route('books.destroy', $book->id) }}">
                                 @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}">
                                 @method('DELETE')
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
@@ -207,6 +222,7 @@
                     <div class="toggle-form toggle_memo">
                         <form method="post" action="{{ route('books.update', $book->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             @error('memo')
                                 <div>{{ $message }}</div>
@@ -220,6 +236,7 @@
                     <div class="toggle-form toggle_target">
                         <form method="post" action="{{ route('books.update', $book->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             <label>インプットしたい内容</label><br>
                             @error('title')
@@ -263,6 +280,7 @@
                     <div class="toggle-form toggle_done">
                         <form method="post" action="{{ route('book_explanations.store') }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('POST')
 
                             <label>学んだ内容を説明すると</label>
@@ -302,6 +320,7 @@
                                 <form method="post"
                                     action="{{ route('book_explanations.update', $book_explanation->id) }}">
                                     @csrf
+                                    <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                                     @method('PUT')
                                     <textarea name="content" class="">{{ old('title') ?: $book_explanation->content }}</textarea><br>
                                     <button type="submit">編集を完了</button>
@@ -330,7 +349,7 @@
             @foreach ($tasks as $task)
                 <article>
                     <div class="frame">
-                        @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
+                        @if ($task->is_done)
                             <span><i class="fa-solid fa-square-check"></i></span>
                         @else
                             <span><i class="fa-solid fa-square-full"></i></span>
@@ -355,6 +374,7 @@
                             <form style="display: inline-block;" method="post"
                                 action="{{ route('tasks.destroy', $task->id) }}">
                                 @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}">
                                 @method('DELETE')
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
@@ -370,6 +390,7 @@
                     <div class="toggle-form toggle_memo">
                         <form method="post" action="{{ route('tasks.update', $task->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             @error('memo')
                                 <div>{{ $message }}</div>
@@ -383,8 +404,9 @@
                     <div class="toggle-form toggle_target">
                         <form method="post" action="{{ route('tasks.update', $task->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
-                            <label>インプットしたい内容</label><br>
+                            <label>アウトプットしたい内容</label><br>
                             @error('title')
                                 <li>{{ $message }}</li>
                             @enderror
@@ -397,7 +419,7 @@
                             <select name="private_category_id">
                                 @foreach ($private_categories as $private_category)
                                     <option value="{{ $private_category->id }}"
-                                        @if ($private_category->id === $target->private_category_id) selected @endif>
+                                        @if ($private_category->id === $task->private_category_id) selected @endif>
                                         {{ $private_category->category }}
                                     </option>
                                 @endforeach
@@ -427,6 +449,7 @@
                     <div class="toggle-form toggle_done">
                         <form method="post" action="{{ route('task_explanations.store') }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('POST')
 
                             <label>学んだ内容を説明すると</label>
@@ -453,8 +476,10 @@
                                     </div>
                                     <div class="">
                                         <form style="display: inline-block;" method="post"
-                                            action="{{ route('tasks.destroy', $task->id) }}">
+                                            action="{{ route('task_explanations.destroy', $task_explanation->id )}}">
                                             @csrf
+                                            <input type="hidden" name="target_id" value="{{ $target->id }}">
+                                            <input type="hidden" name="task_id" value="{{ $task->id }}">
                                             @method('DELETE')
                                             <button type="submit" class="btn btn--orange btn_delete">削除</button>
                                         </form>
@@ -466,6 +491,7 @@
                                 <form method="post"
                                     action="{{ route('task_explanations.update', $task_explanation->id) }}">
                                     @csrf
+                                    <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                                     @method('PUT')
                                     <textarea name="content" class="">{{ old('title') ?: $task_explanation->content }}</textarea><br>
                                     <button type="submit">編集を完了</button>
@@ -486,6 +512,7 @@
         <div class="toggle-form toggle_idea">
             <form method="post" action="{{ route('ideas.store') }}">
                 @csrf
+                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                 @error('idea')
                     <li>{{ $message }}</li>
                 @enderror
@@ -510,6 +537,7 @@
                             <form style="display: inline-block;" method="post"
                                 action="{{ route('ideas.destroy', $idea->id) }}">
                                 @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                                 @method('DELETE')
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
@@ -519,10 +547,11 @@
                     <div class="toggle-form toggle_idea">
                         <form method="post" action="{{ route('ideas.update', $idea->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             <label>考察</label><br>
                             <textarea name="idea">{{ old('idea') ?: $idea->idea }}</textarea><br>
-                            <button type="submit">編集を完了</button>
+                            <button type="submit">編集完了</button>
                         </form>
                     </div>
                 </article>

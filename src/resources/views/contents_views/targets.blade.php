@@ -74,24 +74,32 @@
         @else
             {{-- 目標データがDBにある場合の表示内容 --}}
             @foreach ($targets as $target)
-                {{-- @if ($target->user_id === Auth::user()->id) --}}
                 <article>
-                    {{-- <p>投稿者：{{ $target->user->name }}</p> --}}
                     <div class="frame">
+                        {{-- チェックボックスの画像リンク表示 --}}
                         @if ($target->is_done === 1)
-                            <span><i class="fa-solid fa-square-check"></i></span>
-                        @else
-                            <span><i class="fa-solid fa-square-full"></i></span>
-                        @endif
-                        <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
-                        <div class="buttons">
-{{-- エラー箇所！ --}}
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                @if ($target->is_done === 1)
-                                    <button type="submit" name="is_done" value="0" class="btn">復習</button>
-                                @else
+                                <button type="submit" name="is_done" value="0" class="btn"> <span><i
+                                            class="fa-solid fa-square-check"></i></span></button>
+                            </form>
+                        @else
+                            <form method="post" action="{{ route('targets.update', $target->id) }}">
+                                @csrf
+                                @method('PUT')
+                                    <button type="submit" name="is_done" value="1" class="btn"> <span><i
+                                                class="fa-solid fa-square-full"></i></span></button>
+                            </form>
+                        @endif
+                        {{-- 目標タイトルリンク表示 --}}
+                        <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
+                        <div class="buttons">
+                            {{-- エラー箇所！ --}}
+                            <form method="post" action="{{ route('targets.update', $target->id) }}">
+                                @csrf
+                                @method('PUT')
+                                @if ($target->is_done === 0)
                                     <button type="submit" name="is_done" value="1" class="btn">完了</button>
                                 @endif
                             </form>
@@ -110,7 +118,7 @@
                         </div>
                         <div>
                             @if ($target->limit !== null)
-                            {{ $target->limit->format('Y/m/d') }}まで
+                                {{ $target->limit->format('Y/m/d') }}まで
                             @else
                             @endif
                         </div>
@@ -164,14 +172,14 @@
                             </select><br>
 
                             <label>目標期限</label>
-                             @if($target->limit)
-                            期限なし
+                            @if ($target->limit)
+                                期限なし
                             @else
-                            @error('limit')
-                                <li>{{ $message }}</li>
-                            @enderror
-                            {{-- <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br> --}}
-                             @endif
+                                @error('limit')
+                                    <li>{{ $message }}</li>
+                                @enderror
+                                {{-- <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br> --}}
+                            @endif
                             <label>公開</label>
                             @error('public')
                                 <li>{{ $message }}</li>
@@ -203,14 +211,14 @@
         @endif
     </section>
     <section>
-        
-{{-- エラー箇所！バリデーションを設定すること --}}
+
+        {{-- エラー箇所！バリデーションを設定すること --}}
         <button type="button" onclick="" class="create toggle_idea_form">考察を追加</button>
         <div class="toggle-form toggle_idea">
             <form method="post" action="{{ route('ideas.store') }}">
                 @csrf
                 @error('idea')
-                <li>{{ $message }}</li>
+                    <li>{{ $message }}</li>
                 @enderror
                 <label>考察</label><br>
                 <textarea name="idea"></textarea><br>
@@ -245,7 +253,7 @@
                             @method('PUT')
                             <label>考察</label><br>
                             <textarea name="idea">{{ old('idea') ?: $idea->idea }}</textarea><br>
-                            <button type="submit">編集を完了</button>
+                            <button type="submit">編集完了</button>
                         </form>
                     </div>
                 </article>

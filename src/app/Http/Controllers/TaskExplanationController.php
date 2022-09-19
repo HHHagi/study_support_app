@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskExplanation;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskExplanationController extends Controller
@@ -36,9 +37,12 @@ class TaskExplanationController extends Controller
     public function store(Request $request)
     {
         $task_explanations = new TaskExplanation;
+        $task = Task::find($request->task_id);
+        $task->is_done  = '1'; 
         $form  = $request->all();
         $task_explanations->fill($form);
         $task_explanations->save();
+        $task->update();
         return back();
     }
 
@@ -85,8 +89,18 @@ class TaskExplanationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($task_explanation_id, Request $request)
     {
-        //
+        $task_explanation = TaskExplanation::find($task_explanation_id);
+        $task_explanation->delete();
+        // taskexplanationがゼロになったら、taskのis_doneをゼロにする処理をかく
+        $task_id = $request->task_id;
+        $task_explanation =  TaskExplanation::find($task_id);
+        if(!$task_explanation){
+            $task = Task::find($task_id);
+            $task->is_done  = '1';
+            $task->update();
+        }
+        return back();
     }
 }

@@ -13,7 +13,7 @@ class UpdateIdeaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class UpdateIdeaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'idea' => 'required|string',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'idea.required' => '考察を入力してください。',
+            'idea.string' => '考察は文字列で入力してください。',
         ];
     }
 }

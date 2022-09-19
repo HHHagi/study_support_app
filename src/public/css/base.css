@@ -70,3 +70,11 @@ a.btn--blue:hover {
 .buttons{
   margin-left: auto;
 }
+
+.sort-item{
+  display: inline-block;
+}
+
+.sort_form{
+  display: none;
+}

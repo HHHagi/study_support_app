@@ -90,15 +90,18 @@ class TargetController extends Controller
         $private_categories = PrivateCategory::all();
         $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
         if ($request->private_category_id) {
-            $select = $request->private_category_id;
-            $books = Book::where('target_id', $id)->where('private_category_id', $select)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->where('private_category_id', $select)->orderBy('id', 'desc')->get();
-
+            $select_private_category_id = $request->private_category_id;
             if ($request->is_done) {
-                $select = $request->is_done;
-                $books = $books::where('is_done', $select)->orderBy('id', 'desc')->get();
-                $tasks = $tasks::where('is_done', $select)->orderBy('id', 'desc')->get();
+                $select_is_done = $request->is_done;
+                $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+                $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
             }
+            $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
+        } elseif ($request->is_done) {
+            $select = $request->is_done;
+            $books = Book::where('target_id', $id)->where('is_done', $select)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->where('is_done', $select)->orderBy('id', 'desc')->get();
         } else {
             $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
             $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();

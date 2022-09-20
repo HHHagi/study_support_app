@@ -89,18 +89,20 @@ class TaskExplanationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($task_explanation_id, Request $request)
+    public function destroy($id, Request $request)
     {
-        $task_explanation = TaskExplanation::find($task_explanation_id);
+        $task_explanation = TaskExplanation::find($id);
         $task_explanation->delete();
         // taskexplanationがゼロになったら、taskのis_doneをゼロにする処理をかく
-        $task_id = $request->task_id;
-        $task_explanation =  TaskExplanation::find($task_id);
-        if(!$task_explanation){
-            $task = Task::find($task_id);
-            $task->is_done  = '1';
-            $task->update();
-        }
+        // $task_id = $request->task_id;
+        // $task_explanation =  TaskExplanation::find($task_id);
+        // if(!$task_explanation){
+        //     $task = Task::find($task_id);
+        //     $task->is_done  = '1';
+        //     $task->update();
+        // }
         return back();
+        // 実行したら、http://localhost:8080/task_explanations/6へなぜか飛ばされた
+        //　引数の名前は$idにしないといけない。task_explanation_idにしたら上記が起きた。
     }
 }

@@ -48,10 +48,12 @@
                     {{-- </form> --}}
                 </div>
                 <div class="sort-item">
-                    <button type="button">重要度</button>
-                </div>
-                <div class="sort-item">
-                    <button type="button">すべて</button>
+                    <select name="priority" class="sort_priority">
+                        <option hidden>重要度</option>
+                        <option value="0">高い</option>
+                        <option value="1">中</option>
+                        <option value="1">低い</option>
+                    </select><br>
                 </div>
                 <button type="submit">ソートを完了</button>
             </form>

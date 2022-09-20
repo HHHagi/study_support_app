@@ -74,17 +74,17 @@ $(function () {
     });
 });
 
-$(function() {
-    $('.sort_private_category').change(function () {
-        $('.form_sort_private_category').submit();
-    });
-});
+// $(function() {
+//     $('.sort_private_category').change(function () {
+//         $('.form_sort_private_category').submit();
+//     });
+// });
 
-$(function() {
-    $('.sort_is_done').change(function () {
-        $('.form_sort_is_done').submit();
-    });
-});
+// $(function() {
+//     $('.sort_is_done').change(function () {
+//         $('.form_sort_is_done').submit();
+//     });
+// });
 
 $(function () {
     $('.toggle_sort_form').click(function () {

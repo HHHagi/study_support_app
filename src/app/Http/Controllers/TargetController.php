@@ -93,15 +93,29 @@ class TargetController extends Controller
             $select_private_category_id = $request->private_category_id;
             if ($request->is_done) {
                 $select_is_done = $request->is_done;
+                if ($request->priority) {
+                    $select_priority = $request->priority;
+                    $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+                    $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+                }
                 $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
                 $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
             }
             $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
             $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
         } elseif ($request->is_done) {
-            $select = $request->is_done;
-            $books = Book::where('target_id', $id)->where('is_done', $select)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->where('is_done', $select)->orderBy('id', 'desc')->get();
+            $select_is_done = $request->is_done;
+            if ($request->priority) {
+                $select_priority = $request->priority;
+                $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+                $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+            }
+            $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+        } elseif ($request->priority) {
+            $select_priority = $request->priority;
+            $books = Book::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+            $tasks = Task::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
         } else {
             $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
             $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();

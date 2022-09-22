@@ -89,37 +89,82 @@ class TargetController extends Controller
         $target = Target::find($id);
         $private_categories = PrivateCategory::all();
         $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+
+        // $books = Book::with('book_explanations')->whereHas('book_explanations', function ($query) {
+        //     $query->whereExists(function ($query) {
+        //         return $query;
+        //     });
+        // })->get();
+
+        // $tasks = Task::with('task_explanations')->whereHas('task_explanations', function ($query) {
+        //     $query->whereExists(function ($query) {
+        //         return $query;
+        //     });
+        // })->get();
+
+        // $books = Book::where('target_id', $id)->whereDoesntHave('book_explanations', function ($query) {
+        //     $query->whereExists(function ($query) {
+        //         return $query;
+        //     });
+        // })->get();
+
+        // $tasks = Task::with('task_explanations')->whereDoesntHave('task_explanations', function ($query) {
+        //     $query->whereExists(function ($query) {
+        //         return $query;
+        //     });
+        // })->get();
+             $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
+             $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
+
         if ($request->private_category_id) {
             $select_private_category_id = $request->private_category_id;
-            if ($request->is_done) {
-                $select_is_done = $request->is_done;
-                if ($request->priority) {
-                    $select_priority = $request->priority;
-                    $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-                    $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-                }
-                $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
-                $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
-            }
-            $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
-        } elseif ($request->is_done) {
-            $select_is_done = $request->is_done;
-            if ($request->priority) {
-                $select_priority = $request->priority;
-                $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-                $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-            }
-            $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
-        } elseif ($request->priority) {
-            $select_priority = $request->priority;
-            $books = Book::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
-        } else {
-            $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
-            $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
         }
+        if ($request->priority) {
+            $select_priority = $request->priority;
+        }
+        if ($request->is_done) {
+        }
+
+        if ($select_private_category_id && $request->priority && $request->is_done) {
+            $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('priority', $request->priority)->whereHas('book_explanations', function ($query) {
+                $query->whereExists(function ($query) {
+                    return $query;
+                });
+            })->get();
+            $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        }
+
+        // if ($request->private_category_id) {
+        //     $select_private_category_id = $request->private_category_id;
+        //     if ($request->is_done) {
+        //         $select_is_done = $request->is_done;
+        //         if ($request->priority) {
+        //             $select_priority = $request->priority;
+        //             $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        //             $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        //         }
+        //         $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+        //         $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+        //     }
+        //     $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
+        //     $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->orderBy('id', 'desc')->get();
+        // } elseif ($request->is_done) {
+        //     $select_is_done = $request->is_done;
+        //     if ($request->priority) {
+        //         $select_priority = $request->priority;
+        //         $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        //         $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        //     }
+        //     $books = Book::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+        //     $tasks = Task::where('target_id', $id)->where('is_done', $select_is_done)->orderBy('id', 'desc')->get();
+        // } elseif ($request->priority) {
+        //     $select_priority = $request->priority;
+        //     $books = Book::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        //     $tasks = Task::where('target_id', $id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        // } else {
+        //     $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
+        //     $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
+        // }
         $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas', 'books', 'tasks', 'book_explanations', 'task_explanations'));

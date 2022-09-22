@@ -50,9 +50,9 @@
                 <div class="sort-item">
                     <select name="priority" class="sort_priority">
                         <option hidden>重要度</option>
-                        <option value="0">高い</option>
-                        <option value="1">中</option>
-                        <option value="1">低い</option>
+                        <option value="1">高い</option>
+                        <option value="2">中</option>
+                        <option value="3">低い</option>
                     </select><br>
                 </div>
                 <button type="submit">ソートを完了</button>
@@ -262,6 +262,7 @@
                             @error('priority')
                                 <li>{{ $message }}</li>
                             @enderror
+{{-- 修正箇所 --}}
                             <select name="priority">
                                 <option value="1">高い</option>
                                 <option value="2">中</option>
@@ -351,7 +352,7 @@
             @foreach ($tasks as $task)
                 <article>
                     <div class="frame">
-                        @if ($task->is_done)
+                        @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
                             <span><i class="fa-solid fa-square-check"></i></span>
                         @else
                             <span><i class="fa-solid fa-square-full"></i></span>
@@ -426,7 +427,7 @@
                                     </option>
                                 @endforeach
                             </select><br>
-
+{{-- 修正箇所 --}}
                             <label>重要度</label>
                             @error('priority')
                                 <li>{{ $message }}</li>

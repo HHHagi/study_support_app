@@ -103,6 +103,6 @@ class TaskExplanationController extends Controller
         // }
         return back();
         // 実行したら、http://localhost:8080/task_explanations/6へなぜか飛ばされた
-        //　引数の名前は$idにしないといけない。task_explanation_idにしたら上記が起きた。
+        //　引数の名前は$idにしないといけない。task_explanation_idにしたら上記が起きた。メモに残しておくこと。
     }
 }

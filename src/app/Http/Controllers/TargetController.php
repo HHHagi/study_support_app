@@ -30,11 +30,12 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user_id = Auth::user()->id;
-        $targets = Target::where('user_id', $user_id)->orderBy('id', 'desc')->get();
-        $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        $PAGE_NUMBER = 5;
+        $targets = Target::where('user_id', $user_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage')->appends(["ideaPage" => $request->input('ideaPage')]);
+        $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'ideaPage')->appends(["targetPage" => $request->input('targetPage')]);
         $private_categories = PrivateCategory::where('user_id', $user_id)->get();
         $public_categories = PublicCategory::all();
         return view('contents_views.targets', compact('targets', 'ideas', 'private_categories', 'public_categories'));
@@ -88,7 +89,7 @@ class TargetController extends Controller
         $user_id = Auth::user()->id;
         $target = Target::find($id);
         $private_categories = PrivateCategory::all();
-        $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        // $ideas = Idea::where('user_id', $user_id)->orderBy('id', 'desc')->get();
 
         // $books = Book::with('book_explanations')->whereHas('book_explanations', function ($query) {
         //     $query->whereExists(function ($query) {
@@ -113,26 +114,159 @@ class TargetController extends Controller
         //         return $query;
         //     });
         // })->get();
-             $books = Book::where('target_id', $id)->orderBy('id', 'desc')->get();
-             $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->get();
-
+        $PAGE_NUMBER = 10;
+        $books = Book::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+        $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+        // $request->private_category_idを選択した場合 
         if ($request->private_category_id) {
-            $select_private_category_id = $request->private_category_id;
+            $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+            $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            // $request->private_category_idと$request->priorityの選択の場合 
+            if ($request->priority) {
+                $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+                // $request->private_category_idと$request->priorityとis_doneの選択の場合
+                if ($request->is_done == 1) {
+                    $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+                        ->whereHas('book_explanations', function ($query) {
+                            $query->whereExists(function ($query) {
+                                return $query;
+                            });
+                        })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                    $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+                        ->whereHas('task_explanations', function ($query) {
+                            $query->whereExists(function ($query) {
+                                return $query;
+                            });
+                        })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+                }
+                if ($request->is_done == 2) {
+                    $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+                        ->whereDoesntHave('book_explanations', function ($query) {
+                            $query->whereExists(function ($query) {
+                                return $query;
+                            });
+                        })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                    $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+                        ->whereDoesntHave('task_explanations', function ($query) {
+                            $query->whereExists(function ($query) {
+                                return $query;
+                            });
+                        })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+                }
+            }
+            // $request->private_category_idとis_doneの選択の場合
+            if ($request->is_done == 1) {
+                $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)
+                    ->whereHas('book_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)
+                    ->whereHas('task_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
+            if ($request->is_done == 2) {
+                $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)
+                    ->whereDoesntHave('book_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)
+                    ->whereDoesntHave('task_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
         }
-        if ($request->priority) {
-            $select_priority = $request->priority;
-        }
-        if ($request->is_done) {
+        if (!$request->private_category_id && $request->priority) {
+            // $request->priorityのみの場合
+            $books = Book::where('target_id', $id)->where('priority', $request->priority)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+            $tasks = Task::where('target_id', $id)->where('priority', $request->priority)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            // $request->prirityとis_doneの場合
+            if ($request->is_done == 1) {
+                $books = Book::where('target_id', $id)->where('priority', $request->priority)
+                    ->whereHas('book_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                $tasks = Task::where('target_id', $id)->where('priority', $request->priority)
+                    ->whereHas('task_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
+            if ($request->is_done == 2) {
+                $books = Book::where('target_id', $id)->where('priority', $request->priority)
+                    ->whereDoesntHave('book_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+                $tasks = Task::where('target_id', $id)->where('priority', $request->priority)
+                    ->whereDoesntHave('task_explanations', function ($query) {
+                        $query->whereExists(function ($query) {
+                            return $query;
+                        });
+                    })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
         }
 
-        if ($select_private_category_id && $request->priority && $request->is_done) {
-            $books = Book::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('priority', $request->priority)->whereHas('book_explanations', function ($query) {
-                $query->whereExists(function ($query) {
-                    return $query;
-                });
-            })->get();
-            $tasks = Task::where('target_id', $id)->where('private_category_id', $select_private_category_id)->where('priority', $select_priority)->orderBy('id', 'desc')->get();
+        if (!$request->private_category_id && !$request->priority) {
+            // is_doneのみの場合
+            if($request->is_done == 1){
+                $books = Book::where('target_id', $id)
+                ->whereHas('book_explanations', function ($query) {
+                    $query->whereExists(function ($query) {
+                        return $query;
+                    });
+                })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+            $tasks = Task::where('target_id', $id)
+                ->whereHas('task_explanations', function ($query) {
+                    $query->whereExists(function ($query) {
+                        return $query;
+                    });
+                })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
+            if($request->is_done == 2){
+                $books = Book::where('target_id', $id)
+                ->whereDoesntHave('book_explanations', function ($query) {
+                    $query->whereExists(function ($query) {
+                        return $query;
+                    });
+                })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+            $tasks = Task::where('target_id', $id)
+                ->whereDoesntHave('task_explanations', function ($query) {
+                    $query->whereExists(function ($query) {
+                        return $query;
+                    });
+                })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            }
         }
+
+
+        // if ($request->private_category_id && $request->priority && $request->is_done) {
+        //     $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+        //     ->whereHas('book_explanations', function ($query) {
+        //         $query->whereExists(function ($query) {
+        //             return $query;
+        //         });
+        //     })->orderBy('id', 'desc')->get();
+        //     $tasks = Task::where('target_id', $id)->where('private_category_id', $request->private_category_id)->where('priority', $request->priority)
+        //     ->whereHas('task_explanations', function ($query) {
+        //         $query->whereExists(function ($query) {
+        //             return $query;
+        //         });
+        //     })->orderBy('id', 'desc')->get();
+        // }
 
         // if ($request->private_category_id) {
         //     $select_private_category_id = $request->private_category_id;
@@ -167,7 +301,7 @@ class TargetController extends Controller
         // }
         $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
-        return view('contents_views.target_edit', compact('target', 'private_categories', 'ideas', 'books', 'tasks', 'book_explanations', 'task_explanations'));
+        return view('contents_views.target_edit', compact('target', 'private_categories', 'books', 'tasks', 'book_explanations', 'task_explanations'));
     }
 
     /**

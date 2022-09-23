@@ -78,3 +78,7 @@ a.btn--blue:hover {
 .sort_form{
   display: none;
 }
+
+.pagination {
+  justify-content: center;
+}

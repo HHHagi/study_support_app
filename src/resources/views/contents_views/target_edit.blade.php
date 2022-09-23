@@ -30,8 +30,8 @@
                 <div class="sort-item">
                     {{-- <form class="form_sort_private_category"> --}}
                     <select name="private_category_id" class="sort_private_category">
-                        <option hidden>マイカテゴリーを選択</option>
-                        <option value="">すべて</option>
+                        <option value="" selected>マイカテゴリーを選択</option>
+                        <option value="" >すべて</option>
                         @foreach ($private_categories as $private_category)
                             <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
                         @endforeach
@@ -41,15 +41,17 @@
                 <div class="sort-item">
                     {{-- <form class="form_sort_is_done"> --}}
                     <select name="is_done" class="sort_is_done">
-                        <option hidden>未完了or完了</option>
-                        <option value="0">未完了</option>
+                        <option value="" selected>完了か未完了を選択</option>
+                        <option value="" >どちらも</option>
+                        <option value="2">未完了</option>
                         <option value="1">完了</option>
                     </select><br>
                     {{-- </form> --}}
                 </div>
                 <div class="sort-item">
                     <select name="priority" class="sort_priority">
-                        <option hidden>重要度</option>
+                        <option value="" selected>重要度を選択</option>
+                        <option value="" >すべて</option>
                         <option value="1">高い</option>
                         <option value="2">中</option>
                         <option value="3">低い</option>
@@ -205,8 +207,7 @@
                             <button class="btn btn--blue toggle_target_edit_form">編集</button>
                         </div>
                         <div class="">
-                            <form style="display: inline;" method="post"
-                                action="{{ route('books.destroy', $book->id) }}">
+                            <form style="display: inline;" method="post" action="{{ route('books.destroy', $book->id) }}">
                                 @csrf
                                 <input type="hidden" name="target_id" value="{{ $target->id }}">
                                 @method('DELETE')
@@ -262,11 +263,10 @@
                             @error('priority')
                                 <li>{{ $message }}</li>
                             @enderror
-{{-- 修正箇所 --}}
                             <select name="priority">
-                                <option value="1">高い</option>
-                                <option value="2">中</option>
-                                <option value="3">低い</option>
+                                <option value="1" @if ($book->priority == "1") selected @endif>高い</option>
+                                <option value="2" @if ($book->priority == "2") selected @endif>中</option>
+                                <option value="3" @if ($book->priority == "3") selected @endif>低い</option>
                             </select><br>
 
                             <label>目標期限</label>
@@ -427,15 +427,15 @@
                                     </option>
                                 @endforeach
                             </select><br>
-{{-- 修正箇所 --}}
+
                             <label>重要度</label>
                             @error('priority')
                                 <li>{{ $message }}</li>
                             @enderror
                             <select name="priority">
-                                <option value="1">高い</option>
-                                <option value="2">中</option>
-                                <option value="3">低い</option>
+                                <option value="1" @if ($task->priority == "1") selected @endif>高い</option>
+                                <option value="2" @if ($task->priority == "2") selected @endif>中</option>
+                                <option value="3" @if ($task->priority == "3") selected @endif>低い</option>
                             </select><br>
 
                             <label>目標期限</label>
@@ -479,7 +479,7 @@
                                     </div>
                                     <div class="">
                                         <form style="display: inline-block;" method="post"
-                                            action="{{ route('task_explanations.destroy', $task_explanation->id )}}">
+                                            action="{{ route('task_explanations.destroy', $task_explanation->id) }}">
                                             @csrf
                                             <input type="hidden" name="target_id" value="{{ $target->id }}">
                                             <input type="hidden" name="task_id" value="{{ $task->id }}">

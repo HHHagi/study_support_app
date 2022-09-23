@@ -8,6 +8,7 @@
         <button type="button" class="toggle_target_form">新しいインプット</button>
         <button type="button" class="toggle_task_form">新しいアウトプット</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
+        <button type="button" class="toggle_sort_form">ソート</button>
         <div class="toggle-form toggle_private_category">
             <form method="post" action="{{ route('private_categories.store') }}">
                 @csrf
@@ -20,7 +21,6 @@
                 <button type="submit">作成</button>
             </form>
         </div>
-        <button type="button" class="toggle_sort_form">ソート</button>
         {{-- ソートするフォーム --}}
         <div class="sort_form">
             <form method="post" action="{{ route('targets.edit', $target->id) }}">
@@ -335,6 +335,7 @@
 
                 </article>
             @endforeach
+            {{ $books->links() }}
         @endif
     </section>
 
@@ -504,12 +505,13 @@
 
                 </article>
             @endforeach
+            {{ $tasks->links() }}
         @endif
 
     </section>
 
-
-    {{-- 考察を表示するエリア --}}
+{{-- 
+    考察を表示するエリア
     <section>
         <button type="button" onclick="" class="create toggle_idea_form">考察を追加</button>
         <div class="toggle-form toggle_idea">
@@ -525,12 +527,12 @@
             </form>
         </div>
         @if ($ideas->isEmpty())
-            {{-- 考察データがDBにない場合 --}}
+            考察データがDBにない場合
             <article>
                 まだ考察がありません
             </article>
         @else
-            {{-- 考察データがDBにある場合 --}}
+            考察データがDBにある場合
             @foreach ($ideas as $idea)
                 <article>
                     <div class="frame">
@@ -546,7 +548,7 @@
                             </form>
                         </div>
                     </div>
-                    {{-- 考察の編集フォーム --}}
+                    考察の編集フォーム
                     <div class="toggle-form toggle_idea">
                         <form method="post" action="{{ route('ideas.update', $idea->id) }}">
                             @csrf
@@ -560,5 +562,6 @@
                 </article>
             @endforeach
         @endif
-    </section>
+    </section> --}}
+
 @endsection

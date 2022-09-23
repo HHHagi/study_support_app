@@ -208,6 +208,7 @@
                     </div> --}}
                 </article>
             @endforeach
+            {{ $targets->links() }}
         @endif
     </section>
     <section>
@@ -258,6 +259,7 @@
                     </div>
                 </article>
             @endforeach
+            {{ $ideas->links() }}
         @endif
     </section>
 @endsection

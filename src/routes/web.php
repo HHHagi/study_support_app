@@ -22,6 +22,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/our_targets', [App\Http\Controllers\OurTargetController::class, 'index']);
+
 Route::resource('targets', 'App\Http\Controllers\TargetController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('ideas', 'App\Http\Controllers\IdeaController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('private_categories', 'App\Http\Controllers\PrivateCategoryController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
@@ -29,3 +31,5 @@ Route::resource('books', 'App\Http\Controllers\BookController', ['only' => ['ind
 Route::resource('tasks', 'App\Http\Controllers\TaskController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('book_explanations', 'App\Http\Controllers\BookExplanationController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
 Route::resource('task_explanations', 'App\Http\Controllers\TaskExplanationController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
+Route::resource('our_targets', 'App\Http\Controllers\OurTargetController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']]);
+

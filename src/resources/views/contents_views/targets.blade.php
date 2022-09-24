@@ -3,6 +3,7 @@
 
 @section('content')
     <section>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標をみる</button>
         <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
         <button type="button" class="toggle_target_form">新しい目標をつくる</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
@@ -24,7 +25,6 @@
             <form method="post" action="{{ route('targets.index') }}">
                 @csrf
                 @method('GET')
-                {{-- <input type="hidden" name="target_id" value="{{ $target->id }}"><br> --}}
                 <div class="sort-item">
                     <select name="public_category_id" class="sort_public_category">
                         <option value="" selected>公式カテゴリを選択</option>
@@ -99,7 +99,7 @@
                     <li>{{ $message }}</li>
                 @enderror
                 <input type="hidden" name="is_private" value="0"> <br>
-                <input type="checkbox" name="is_private" value="1"> <br>
+                <input type="checkbox" name="is_private" value="1" checked><br>
 
                 <input type="hidden" name="is_done" value="2"> <br>
 
@@ -238,13 +238,13 @@
                             </select><br>
 
                             <label>目標期限</label>
-                            @if ($target->limit)
+                            @if (!$target->limit)
                                 期限なし
                             @else
                                 @error('limit')
                                     <li>{{ $message }}</li>
                                 @enderror
-                                {{-- <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br> --}}
+                                <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br>
                             @endif
                             <label>公開</label>
                             @error('public')

@@ -28,7 +28,6 @@
                 @method('GET')
                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                 <div class="sort-item">
-                    {{-- <form class="form_sort_private_category"> --}}
                     <select name="private_category_id" class="sort_private_category">
                         <option value="" selected>マイカテゴリーを選択</option>
                         <option value="">すべて</option>
@@ -36,17 +35,14 @@
                             <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
                         @endforeach
                     </select><br>
-                    {{-- </form> --}}
                 </div>
                 <div class="sort-item">
-                    {{-- <form class="form_sort_is_done"> --}}
                     <select name="is_done" class="sort_is_done">
                         <option value="" selected>完了か未完了を選択</option>
                         <option value="">どちらも</option>
                         <option value="2">未完了</option>
                         <option value="1">完了</option>
                     </select><br>
-                    {{-- </form> --}}
                 </div>
                 <div class="sort-item">
                     <select name="priority" class="sort_priority">
@@ -288,12 +284,6 @@
                                 <option value="3" @if ($book->priority == '3') selected @endif>低い</option>
                             </select><br>
 
-                            <label>目標期限</label>
-                            @error('limit')
-                                <li>{{ $message }}</li>
-                            @enderror
-                            <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br>
-
                             <button type="submit">編集完了</button>
                         </form>
                     </div>
@@ -486,12 +476,6 @@
                                 <option value="3" @if ($task->priority == '3') selected @endif>低い</option>
                             </select><br>
 
-                            <label>目標期限</label>
-                            @error('limit')
-                                <li>{{ $message }}</li>
-                            @enderror
-                            <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br>
-
                             <button type="submit">編集完了</button>
                         </form>
                     </div>
@@ -554,58 +538,5 @@
         @endif
 
     </section>
-
-    {{-- 考察を表示するエリア
-    <section>
-        <button type="button" onclick="" class="create toggle_idea_form">考察を追加</button>
-        <div class="toggle-form toggle_idea">
-            <form method="post" action="{{ route('ideas.store') }}">
-                @csrf
-                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                @error('idea')
-                    <li>{{ $message }}</li>
-                @enderror
-                <label>考察</label><br>
-                <textarea name="idea"></textarea><br>
-                <input type="submit">
-            </form>
-        </div>
-        @if ($ideas->isEmpty())
-            考察データがDBにない場合
-            <article>
-                まだ考察がありません
-            </article>
-        @else
-            考察データがDBにある場合
-            @foreach ($ideas as $idea)
-                <article>
-                    <div class="frame">
-                        <span>{{ $idea->idea }}</span>
-                        <div class="buttons">
-                            <button class="btn btn--blue toggle_idea_edit_form">編集</button>
-                            <form style="display: inline-block;" method="post"
-                                action="{{ route('ideas.destroy', $idea->id) }}">
-                                @csrf
-                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                                @method('DELETE')
-                                <button type="submit" class="btn btn--orange btn_delete">削除</button>
-                            </form>
-                        </div>
-                    </div>
-                    考察の編集フォーム
-                    <div class="toggle-form toggle_idea">
-                        <form method="post" action="{{ route('ideas.update', $idea->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            <label>考察</label><br>
-                            <textarea name="idea">{{ old('idea') ?: $idea->idea }}</textarea><br>
-                            <button type="submit">編集完了</button>
-                        </form>
-                    </div>
-                </article>
-            @endforeach
-        @endif
-    </section> --}}
 
 @endsection

@@ -105,13 +105,7 @@
                     <option value="3">低い</option>
                 </select><br>
 
-                <label>目標期限</label>
-                @error('limit')
-                    <li>{{ $message }}</li>
-                @enderror
-                <input name="limit" type="date"><br>
-
-                <input type="submit">
+                <button type="submit">作成</button>
             </form>
         </div>
 
@@ -158,13 +152,7 @@
                     <option value="3">低い</option>
                 </select><br>
 
-                <label>目標期限</label>
-                @error('limit')
-                    <li>{{ $message }}</li>
-                @enderror
-                <input name="limit" type="date"><br>
-
-                <input type="submit">
+                <button type="submit">作成</button>
             </form>
         </div>
 
@@ -218,7 +206,7 @@
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
                         </div>
-                        
+
                         <div style="display: inline;">
                             <?php $book_explanations_count = $book->book_explanations_count; ?>
                             @for ($i = 0; $i < $book_explanations_count; $i++)
@@ -235,18 +223,36 @@
 
                     </div>
                     {{-- メモの入力フォーム --}}
-                    <div class="toggle-form toggle_memo">
-                        <form method="post" action="{{ route('books.update', $book->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            @error('memo')
+                    @if ($book->memo)
+                        <div class="toggle-form toggle_memo">
+                            <p class="display_toggle">{{ $book->memo }}</p>
+                            <button class="edit_memo display_toggle">メモを編集</button>
+
+                            <form class="hide display_toggle2" method="post" action="{{ route('books.update', $book->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
                                 <div>{{ $message }}</div>
-                            @enderror
-                            <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
-                            <input type="submit" value="メモを追加・編集">
-                        </form>
-                    </div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
+                                <button type="submit">編集完了</button>
+                            </form>
+                        </div>
+                        @else
+                        <div class="toggle-form toggle_memo">
+                            <form method="post" action="{{ route('books.update', $book->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
+                                <div>{{ $message }}</div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
+                                <button type="submit">メモを追加</button>
+                            </form>
+                        </div>
+                    @endif
 
                     {{-- インプット編集フォーム --}}
                     <div class="toggle-form toggle_target">
@@ -414,18 +420,36 @@
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
+                    @if($task->memo)
+                    <div class="toggle-form toggle_memo">
+                        <p class="display_toggle">{{ $task->memo }}</p>
+                        <button class="edit_memo display_toggle">メモを編集</button>
+
+                        <form class="hide display_toggle2" method="post" action="{{ route('tasks.update', $task->id) }}">
+                            @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                            @method('PUT')
+                            @error('memo')
+                            <div>{{ $message }}</div>
+                            @enderror
+                            <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
+                            <button type="submit">編集完了</button>
+                        </form>
+                    </div>
+                    @else
                     <div class="toggle-form toggle_memo">
                         <form method="post" action="{{ route('tasks.update', $task->id) }}">
                             @csrf
                             <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             @error('memo')
-                                <div>{{ $message }}</div>
+                            <div>{{ $message }}</div>
                             @enderror
                             <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
-                            <input type="submit" value="メモを追加・編集">
+                            <button type="submit">メモを追加</button>
                         </form>
                     </div>
+                    @endif
 
                     {{-- アウトプット編集フォーム --}}
                     <div class="toggle-form toggle_target">

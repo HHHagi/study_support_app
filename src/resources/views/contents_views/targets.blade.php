@@ -171,17 +171,36 @@
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
+                    @if($target->memo)
+                    <div class="toggle-form toggle_memo">
+                        <p class="display_toggle">{{ $target->memo }}</p>
+                        <button class="edit_memo display_toggle">メモを編集</button>
+
+                        <form class="hide display_toggle2" method="post" action="{{ route('targets.update', $target->id) }}">
+                            @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                            @method('PUT')
+                            @error('memo')
+                            <div>{{ $message }}</div>
+                            @enderror
+                            <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
+                            <button type="submit">編集完了</button>
+                        </form>
+                    </div>
+                    @else
                     <div class="toggle-form toggle_memo">
                         <form method="post" action="{{ route('targets.update', $target->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             @error('memo')
-                                <div>{{ $message }}</div>
+                            <div>{{ $message }}</div>
                             @enderror
                             <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                            <input type="submit" value="メモを追加・編集">
+                            <button type="submit">メモを追加</button>
                         </form>
                     </div>
+                    @endif
 
                     {{-- 目標の編集フォーム --}}
                     <div class="toggle-form toggle_target">

@@ -91,3 +91,11 @@ $(function () {
         $(this).nextAll('.sort_form').slideToggle();
     });
 });
+
+$(function () {
+    $('.edit_memo').click(function () {
+        $(this).prev('.display_toggle').addClass("hide");
+        $(this).addClass('hide');
+        $(this).siblings('.display_toggle2').removeClass("hide");
+    });
+});

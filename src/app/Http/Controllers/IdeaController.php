@@ -83,7 +83,7 @@ class IdeaController extends Controller
         $idea = Idea::find($id);
         $form  = $request->all();
         $idea->update($form);
-        return redirect('/targets'); 
+        return back(); 
     }
 
     /**

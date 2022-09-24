@@ -24,14 +24,13 @@ class UpdateTargetRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_done' => 'required|string',
+            'is_done' => 'string',
         ];
     }
 
     public function messages()
     {
         return [
-            'is_done.required' => '不明なエラーが発生しました。',
             'is_done.string' => '不明なエラーが発生しました。',
         ];
     }

@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreIdeaRequest;
-use App\Http\Requests\UpdateIdeaRequest;
+use App\Http\Requests\StoreTargetRequest;
+use App\Http\Requests\UpdateTargetRequest;
+use App\Http\Requests\StoreUpdateMemoRequest;
 
-use App\Models\Idea;
+use App\Models\Target;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Idea;
+use App\Models\PrivateCategory;
+use App\Models\PublicCategory;
+use App\Models\Book;
+use App\Models\Task;
+use App\Models\BookExplanation;
+use App\Models\TaskExplanation;
 
-class IdeaController extends Controller
+class OurTargetController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +27,13 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        //
+        $user_id = Auth::user()->id;
+        $users = User::all();
+        $PAGE_NUMBER = 5;
+        $public_categories = PublicCategory::all();
+        $targets = Target::where('is_private', "1")->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+
+        return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }
 
     /**
@@ -39,14 +52,9 @@ class IdeaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreIdeaRequest $request)
+    public function store(Request $request)
     {
-        $ideas = new Idea;
-        $form  = $request->all();
-        $ideas->fill($form);
-        $ideas->user_id = Auth::user()->id;
-        $ideas->save();
-        return redirect('/targets');
+        //
     }
 
     /**
@@ -78,12 +86,9 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateIdeaRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $idea = Idea::find($id);
-        $form  = $request->all();
-        $idea->update($form);
-        return back(); 
+        //
     }
 
     /**
@@ -94,8 +99,6 @@ class IdeaController extends Controller
      */
     public function destroy($id)
     {
-        $idea = Idea::find($id);
-        $idea->delete(); 
-        return redirect('/targets'); 
+        //
     }
 }

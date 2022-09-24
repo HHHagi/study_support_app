@@ -3,11 +3,11 @@
 
 @section('content')
     <section>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標をみる</button>
+        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
         <button type="button" class="toggle_target_form">新しい目標をつくる</button>
-        <button type="button">公式カテゴリ</button>
-        <button type="button">マイカテゴリ</button>
-        <button type="button">すべて</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
+        <button type="button" class="toggle_sort_form">ソート</button>
         <div class="toggle-form toggle_private_category">
             <form method="post" action="{{ route('private_categories.store') }}">
                 @csrf
@@ -19,6 +19,45 @@
                 <button type="submit">作成</button>
             </form>
         </div>
+
+        {{-- ソートするフォーム --}}
+        <div class="sort_form">
+            <form method="post" action="{{ route('targets.index') }}">
+                @csrf
+                @method('GET')
+                <div class="sort-item">
+                    <select name="public_category_id" class="sort_public_category">
+                        <option value="" selected>公式カテゴリを選択</option>
+                        <option value="">すべて</option>
+                        @foreach ($public_categories as $public_category)
+                            <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
+                        @endforeach
+                    </select><br>
+                </div>
+
+                <div class="sort-item">
+                    <select name="private_category_id" class="sort_private_category">
+                        <option value="" selected>マイカテゴリーを選択</option>
+                        <option value="">すべて</option>
+                        @foreach ($private_categories as $private_category)
+                            <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                        @endforeach
+                    </select><br>
+                </div>
+
+                <div class="sort-item">
+                    <select name="is_done" class="sort_is_done">
+                        <option value="" selected>完了か未完了を選択</option>
+                        <option value="">どちらも</option>
+                        <option value="2">未完了</option>
+                        <option value="1">完了</option>
+                    </select><br>
+                </div>
+
+                <button type="submit">ソートを完了</button>
+            </form>
+        </div>
+
         {{-- 目標の入力フォーム --}}
         <div class="toggle-form toggle_target">
             <form method="post" action="{{ route('targets.store') }}">
@@ -60,7 +99,9 @@
                     <li>{{ $message }}</li>
                 @enderror
                 <input type="hidden" name="is_private" value="0"> <br>
-                <input type="checkbox" name="is_private" value="1"> <br>
+                <input type="checkbox" name="is_private" value="1" checked><br>
+
+                <input type="hidden" name="is_done" value="2"> <br>
 
                 <input type="submit">
             </form>
@@ -81,15 +122,21 @@
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="is_done" value="0" class="btn"> <span><i
-                                            class="fa-solid fa-square-check"></i></span></button>
+                                <button type="submit" name="is_done" value="2" class="btn">
+                                    <span class="material-symbols-outlined">
+                                        check_box
+                                    </span>
+                                </button>
                             </form>
                         @else
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                    <button type="submit" name="is_done" value="1" class="btn"> <span><i
-                                                class="fa-solid fa-square-full"></i></span></button>
+                                <button type="submit" name="is_done" value="1" class="btn">
+                                    <span class="material-symbols-outlined">
+                                        check_box_outline_blank
+                                    </span>
+                                </button>
                             </form>
                         @endif
                         {{-- 目標タイトルリンク表示 --}}
@@ -99,7 +146,7 @@
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                @if ($target->is_done === 0)
+                                @if ($target->is_done === 2)
                                     <button type="submit" name="is_done" value="1" class="btn">完了</button>
                                 @endif
                             </form>
@@ -124,17 +171,36 @@
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
+                    @if($target->memo)
+                    <div class="toggle-form toggle_memo">
+                        <p class="display_toggle">{{ $target->memo }}</p>
+                        <button class="edit_memo display_toggle">メモを編集</button>
+
+                        <form class="hide display_toggle2" method="post" action="{{ route('targets.update', $target->id) }}">
+                            @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                            @method('PUT')
+                            @error('memo')
+                            <div>{{ $message }}</div>
+                            @enderror
+                            <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
+                            <button type="submit">編集完了</button>
+                        </form>
+                    </div>
+                    @else
                     <div class="toggle-form toggle_memo">
                         <form method="post" action="{{ route('targets.update', $target->id) }}">
                             @csrf
+                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                             @method('PUT')
                             @error('memo')
-                                <div>{{ $message }}</div>
+                            <div>{{ $message }}</div>
                             @enderror
                             <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                            <input type="submit" value="メモを追加・編集">
+                            <button type="submit">メモを追加</button>
                         </form>
                     </div>
+                    @endif
 
                     {{-- 目標の編集フォーム --}}
                     <div class="toggle-form toggle_target">
@@ -172,13 +238,13 @@
                             </select><br>
 
                             <label>目標期限</label>
-                            @if ($target->limit)
+                            @if (!$target->limit)
                                 期限なし
                             @else
                                 @error('limit')
                                     <li>{{ $message }}</li>
                                 @enderror
-                                {{-- <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br> --}}
+                                <input name="limit" type="date" value="{{ $target->limit->format('Y-m-d') }}"><br>
                             @endif
                             <label>公開</label>
                             @error('public')

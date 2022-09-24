@@ -130,8 +130,8 @@ class TargetController extends Controller
         $target = Target::find($id);
         $private_categories = PrivateCategory::all();
         $PAGE_NUMBER = 10;
-        $books = Book::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
-        $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+        $books = Book::withCount('book_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+        $tasks = Task::withCount('task_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
         // $request->private_category_idを選択した場合 
         if ($request->private_category_id) {
             $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);

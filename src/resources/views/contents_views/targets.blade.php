@@ -122,15 +122,21 @@
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="is_done" value="2" class="btn"> <span><i
-                                            class="fa-solid fa-square-check"></i></span></button>
+                                <button type="submit" name="is_done" value="2" class="btn">
+                                    <span class="material-symbols-outlined">
+                                        check_box
+                                    </span>
+                                </button>
                             </form>
                         @else
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="is_done" value="1" class="btn"> <span><i
-                                            class="fa-solid fa-square-full"></i></span></button>
+                                <button type="submit" name="is_done" value="1" class="btn">
+                                    <span class="material-symbols-outlined">
+                                        check_box_outline_blank
+                                    </span>
+                                </button>
                             </form>
                         @endif
                         {{-- 目標タイトルリンク表示 --}}

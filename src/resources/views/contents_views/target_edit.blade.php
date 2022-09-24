@@ -31,7 +31,7 @@
                     {{-- <form class="form_sort_private_category"> --}}
                     <select name="private_category_id" class="sort_private_category">
                         <option value="" selected>マイカテゴリーを選択</option>
-                        <option value="" >すべて</option>
+                        <option value="">すべて</option>
                         @foreach ($private_categories as $private_category)
                             <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
                         @endforeach
@@ -42,7 +42,7 @@
                     {{-- <form class="form_sort_is_done"> --}}
                     <select name="is_done" class="sort_is_done">
                         <option value="" selected>完了か未完了を選択</option>
-                        <option value="" >どちらも</option>
+                        <option value="">どちらも</option>
                         <option value="2">未完了</option>
                         <option value="1">完了</option>
                     </select><br>
@@ -51,7 +51,7 @@
                 <div class="sort-item">
                     <select name="priority" class="sort_priority">
                         <option value="" selected>重要度を選択</option>
-                        <option value="" >すべて</option>
+                        <option value="">すべて</option>
                         <option value="1">高い</option>
                         <option value="2">中</option>
                         <option value="3">低い</option>
@@ -186,9 +186,13 @@
                 <article>
                     <div class="frame">
                         @if (DB::table('book_explanations')->where('book_id', $book->id)->exists())
-                            <span><i class="fa-solid fa-square-check"></i></span>
+                            <span class="material-symbols-outlined">
+                                check_box
+                            </span>
                         @else
-                            <span><i class="fa-solid fa-square-full"></i></span>
+                            <span class="material-symbols-outlined">
+                                check_box_outline_blank
+                            </span>
                         @endif
                         <span>{{ $book->title }}</span>
 
@@ -214,12 +218,21 @@
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
                         </div>
-                        <div>
-                            @if ($target->limit !== null)
-                                {{ $target->limit->format('Y/m/d') }}まで
-                            @else
-                            @endif
+                        
+                        <div style="display: inline;">
+                            <?php $book_explanations_count = $book->book_explanations_count; ?>
+                            @for ($i = 0; $i < $book_explanations_count; $i++)
+                                <span class="material-symbols-outlined">
+                                    check_box
+                                </span>
+                            @endfor
+                            @for ($i = 0; $i < 7 - $book_explanations_count; $i++)
+                                <span class="material-symbols-outlined">
+                                    check_box_outline_blank
+                                </span>
+                            @endfor
                         </div>
+
                     </div>
                     {{-- メモの入力フォーム --}}
                     <div class="toggle-form toggle_memo">
@@ -264,9 +277,9 @@
                                 <li>{{ $message }}</li>
                             @enderror
                             <select name="priority">
-                                <option value="1" @if ($book->priority == "1") selected @endif>高い</option>
-                                <option value="2" @if ($book->priority == "2") selected @endif>中</option>
-                                <option value="3" @if ($book->priority == "3") selected @endif>低い</option>
+                                <option value="1" @if ($book->priority == '1') selected @endif>高い</option>
+                                <option value="2" @if ($book->priority == '2') selected @endif>中</option>
+                                <option value="3" @if ($book->priority == '3') selected @endif>低い</option>
                             </select><br>
 
                             <label>目標期限</label>
@@ -300,17 +313,15 @@
 
                         @foreach ($book_explanations as $book_explanation)
                             @if ($book_explanation->book_id === $book->id)
-                                @if ($loop->index == 0)
-                                    これまで学んだこと
-                                @endif
+                                これまで学んだこと
                                 <div class="frame">
-                                    <li>{{ $book_explanation->content }}</li><br>
+                                    <li class="js_count_explanation">{{ $book_explanation->content }}</li><br>
                                     <div class="buttons">
                                         <button class="btn btn--blue toggle_book_edit_form">編集</button>
                                     </div>
                                     <div class="">
                                         <form style="display: inline-block;" method="post"
-                                            action="{{ route('books.destroy', $book->id) }}">
+                                            action="{{ route('book_explanations.destroy', $book_explanation->id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn--orange btn_delete">削除</button>
@@ -354,9 +365,13 @@
                 <article>
                     <div class="frame">
                         @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
-                            <span><i class="fa-solid fa-square-check"></i></span>
+                            <span class="material-symbols-outlined">
+                                check_box
+                            </span>
                         @else
-                            <span><i class="fa-solid fa-square-full"></i></span>
+                            <span class="material-symbols-outlined">
+                                check_box_outline_blank
+                            </span>
                         @endif
                         <span>{{ $task->title }}</span>
                         {{-- 編集中 --}}
@@ -383,11 +398,19 @@
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
                         </div>
-                        <div>
-                            @if ($target->limit !== null)
-                                {{ $target->limit->format('Y/m/d') }}まで
-                            @else
-                            @endif
+
+                        <div style="display: inline;">
+                            <?php $task_explanations_count = $task->task_explanations_count; ?>
+                            @for ($i = 0; $i < $task_explanations_count; $i++)
+                                <span class="material-symbols-outlined">
+                                    check_box
+                                </span>
+                            @endfor
+                            @for ($i = 0; $i < 7 - $task_explanations_count; $i++)
+                                <span class="material-symbols-outlined">
+                                    check_box_outline_blank
+                                </span>
+                            @endfor
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
@@ -434,9 +457,9 @@
                                 <li>{{ $message }}</li>
                             @enderror
                             <select name="priority">
-                                <option value="1" @if ($task->priority == "1") selected @endif>高い</option>
-                                <option value="2" @if ($task->priority == "2") selected @endif>中</option>
-                                <option value="3" @if ($task->priority == "3") selected @endif>低い</option>
+                                <option value="1" @if ($task->priority == '1') selected @endif>高い</option>
+                                <option value="2" @if ($task->priority == '2') selected @endif>中</option>
+                                <option value="3" @if ($task->priority == '3') selected @endif>低い</option>
                             </select><br>
 
                             <label>目標期限</label>
@@ -470,9 +493,7 @@
 
                         @foreach ($task_explanations as $task_explanation)
                             @if ($task_explanation->task_id === $task->id)
-                                @if ($loop->index == 0)
-                                    これまで学んだこと
-                                @endif
+                                これまで学んだこと
                                 <div class="frame">
                                     <li>{{ $task_explanation->content }}</li><br>
                                     <div class="buttons">
@@ -510,8 +531,7 @@
 
     </section>
 
-{{-- 
-    考察を表示するエリア
+    {{-- 考察を表示するエリア
     <section>
         <button type="button" onclick="" class="create toggle_idea_form">考察を追加</button>
         <div class="toggle-form toggle_idea">

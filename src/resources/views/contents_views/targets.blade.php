@@ -8,17 +8,35 @@
         <button type="button" class="toggle_target_form">新しい目標をつくる</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
         <button type="button" class="toggle_sort_form">ソート</button>
-        <div class="toggle-form toggle_private_category">
-            <form method="post" action="{{ route('private_categories.store') }}">
-                @csrf
-                <label>新規マイカテゴリ名</label><br>
-                @error('title')
-                    <li>{{ $message }}</li>
-                @enderror
-                <input name="category">
-                <button type="submit">作成</button>
-            </form>
-        </div>
+
+        {{-- マイカテゴリがない初期状態 --}}
+        @if (!$private_categories->first())
+            <div>
+                <form method="post" action="{{ route('private_categories.store') }}">
+                    @csrf
+                    <label>新規マイカテゴリ名</label><br>
+                    @error('title')
+                        <li>{{ $message }}</li>
+                    @enderror
+                    <input name="category">
+                    <button type="submit">作成</button>
+                </form>
+            </div>
+        @endif
+        {{-- マイカテゴリが存在する場合の処理 --}}
+        @if ($private_categories->first())
+            <div class="toggle-form toggle_private_category">
+                <form method="post" action="{{ route('private_categories.store') }}">
+                    @csrf
+                    <label>新規マイカテゴリ名</label><br>
+                    @error('title')
+                        <li>{{ $message }}</li>
+                    @enderror
+                    <input name="category">
+                    <button type="submit">作成</button>
+                </form>
+            </div>
+        @endif
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">
@@ -83,9 +101,13 @@
                     <li>{{ $message }}</li>
                 @enderror
                 <select name="private_category_id">
-                    @foreach ($private_categories as $private_category)
-                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
-                    @endforeach
+                    @if ($private_categories)
+                        @foreach ($private_categories as $private_category)
+                            <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                        @endforeach
+                    @else
+                        マイカテゴリーを作成してください
+                    @endif
                 </select><br>
 
                 <label>目標期限</label>
@@ -106,6 +128,11 @@
                 <input type="submit">
             </form>
         </div>
+
+        {{-- マイカテゴリがない初期状態 --}}
+        @if (!$private_categories->first())
+            <p>最初にマイカテゴリを作成しよう！</p>
+        @endif
 
         @if ($targets->isEmpty())
             {{-- 目標データがDBにない場合の表示内 --}}
@@ -171,35 +198,36 @@
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
-                    @if($target->memo)
-                    <div class="toggle-form toggle_memo">
-                        <p class="display_toggle">{{ $target->memo }}</p>
-                        <button class="edit_memo display_toggle">メモを編集</button>
+                    @if ($target->memo)
+                        <div class="toggle-form toggle_memo">
+                            <p class="display_toggle">{{ $target->memo }}</p>
+                            <button class="edit_memo display_toggle">メモを編集</button>
 
-                        <form class="hide display_toggle2" method="post" action="{{ route('targets.update', $target->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            @error('memo')
-                            <div>{{ $message }}</div>
-                            @enderror
-                            <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                            <button type="submit">編集完了</button>
-                        </form>
-                    </div>
+                            <form class="hide display_toggle2" method="post"
+                                action="{{ route('targets.update', $target->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
+                                    <div>{{ $message }}</div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
+                                <button type="submit">編集完了</button>
+                            </form>
+                        </div>
                     @else
-                    <div class="toggle-form toggle_memo">
-                        <form method="post" action="{{ route('targets.update', $target->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            @error('memo')
-                            <div>{{ $message }}</div>
-                            @enderror
-                            <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                            <button type="submit">メモを追加</button>
-                        </form>
-                    </div>
+                        <div class="toggle-form toggle_memo">
+                            <form method="post" action="{{ route('targets.update', $target->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
+                                    <div>{{ $message }}</div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
+                                <button type="submit">メモを追加</button>
+                            </form>
+                        </div>
                     @endif
 
                     {{-- 目標の編集フォーム --}}
@@ -232,7 +260,8 @@
                             <select name="private_category_id">
                                 @foreach ($private_categories as $private_category)
                                     <option value="{{ $private_category->id }}"
-                                        @if ($private_category->id === $target->private_category_id) selected @endif>{{ $private_category->category }}
+                                        @if ($private_category->id === $target->private_category_id) selected @endif>
+                                        {{ $private_category->category }}
                                     </option>
                                 @endforeach
                             </select><br>

@@ -42,4 +42,12 @@ class LoginController extends Controller
     {
         return '/targets';
     }
+
+        /**
+     * ログアウトしたときの画面遷移先
+     */
+    protected function loggedOut(\Illuminate\Http\Request $request)
+    {
+        return redirect('/login');
+    }
 }

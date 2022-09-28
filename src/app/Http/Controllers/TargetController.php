@@ -78,6 +78,8 @@ class TargetController extends Controller
         if (!$request->public_category_id && !$request->private_category_id && !$request->is_done) {
             $targets = Target::where('user_id', $user_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage')->appends(["ideaPage" => $request->input('ideaPage')]);
         }
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
         return view('contents_views.targets', compact('targets', 'ideas', 'private_categories', 'public_categories'));
     }
 
@@ -104,6 +106,8 @@ class TargetController extends Controller
         $targets->fill($form);
         $targets->user_id = Auth::user()->id;
         $targets->save();
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
         return redirect('/targets');
     }
 
@@ -128,7 +132,7 @@ class TargetController extends Controller
     {
         $user_id = Auth::user()->id;
         $target = Target::find($id);
-        $private_categories = PrivateCategory::all();
+        $private_categories = PrivateCategory::where('user_id', $user_id)->get();
         $PAGE_NUMBER = 10;
         $books = Book::withCount('book_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
         $tasks = Task::withCount('task_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
@@ -267,6 +271,8 @@ class TargetController extends Controller
         }
         $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
         return view('contents_views.target_edit', compact('target', 'private_categories', 'books', 'tasks', 'book_explanations', 'task_explanations'));
     }
 
@@ -282,6 +288,8 @@ class TargetController extends Controller
         $target = Target::find($id);
         $form  = $request->all();
         $target->update($form);
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
         return back();
     }
 

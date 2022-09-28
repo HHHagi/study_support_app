@@ -99,3 +99,10 @@ $(function () {
         $(this).siblings('.display_toggle2').removeClass("hide");
     });
 });
+
+$(function(){
+    // 送信ボタンが1度クリックされたら、送信ボタンを非活性化する（二重submit対策）
+    $('form').submit(function() {
+      $("button[type='submit']").prop("disabled", true);
+    });
+  });

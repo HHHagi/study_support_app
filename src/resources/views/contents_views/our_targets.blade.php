@@ -57,6 +57,8 @@
 
                             </div>
                         </div>
+{{-- いいね機能を実装していく --}}
+
                 </article>
                 {{-- @endforeach --}}
             @endforeach

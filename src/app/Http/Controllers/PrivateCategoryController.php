@@ -43,6 +43,8 @@ class PrivateCategoryController extends Controller
         $private_categories->fill($form);
         $private_categories->user_id = Auth::user()->id;
         $private_categories->save();
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
         return back();
     }
 

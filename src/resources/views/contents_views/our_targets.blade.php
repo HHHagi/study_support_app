@@ -51,13 +51,25 @@
                         {{-- 目標タイトルリンク表示 --}}
                         <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
                         <div class="buttons">
-                            {{-- < dd( $target_user->name ) ?> --}}
-                            <span>{{ $target_user->name }}</span>
-                            <div class="">
-
-                            </div>
-                        </div>
+                            {{-- <php dd($target); ?>  --}}
 {{-- いいね機能を実装していく --}}
+                            @if ($target_user_id == $user_id)
+                            @else
+                            <form method="post" action="{{ route('likes.store') }}" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user_id }}">
+                                <input type="hidden" name="target_id" value="{{ $target->id }}">
+                                <button type="submit" class="btn">
+                                {{-- {{ $target->likes->user_id; }} --}}
+                                <span class="material-symbols-outlined">
+                                    favorite
+                                </span>
+                                </button>
+                            </form>
+                            @endif
+                            <span>{{ $target_user->name }}</span>
+                        </div>
+
 
                 </article>
                 {{-- @endforeach --}}

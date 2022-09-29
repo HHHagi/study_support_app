@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTargetRequest;
-use App\Http\Requests\UpdateTargetRequest;
-use App\Http\Requests\StoreUpdateMemoRequest;
 
+
+use App\Models\Like;
 use App\Models\Target;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +17,7 @@ use App\Models\Task;
 use App\Models\BookExplanation;
 use App\Models\TaskExplanation;
 
-class OurTargetController extends Controller
+class LikeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,13 +26,6 @@ class OurTargetController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::user()->id;
-        $users = User::all();
-        $PAGE_NUMBER = 5;
-        $public_categories = PublicCategory::all();
-        $targets = Target::where('is_private', "1")->with('likes')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
-
-        return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }
 
     /**
@@ -54,7 +46,16 @@ class OurTargetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->user_id);
+        $likes = new Like;
+        $form  = $request->all();
+        $likes->fill($form);
+        // $likes->user_id = Auth::user()->id;
+        
+        $likes->save();
+        // CSRFトークンを再生成して、二重送信対策
+        $request->session()->regenerateToken();
+        return back();
     }
 
     /**

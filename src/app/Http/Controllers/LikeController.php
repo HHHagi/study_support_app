@@ -100,6 +100,10 @@ class LikeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $like = Like::where('target_id', $id)->where('user_id', Auth::id())->first();
+        $like->delete();
+        session()->flash('success', 'You Unliked the Reply.');
+    
+        return redirect()->back();
     }
 }

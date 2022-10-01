@@ -49,34 +49,45 @@
                 <article>
                     <div class="frame">
                         {{-- 目標タイトルリンク表示 --}}
-                        <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
+                        <span><a href="{{ route('our_targets.show', $target->id) }}">{{ $target->title }}</a></span>
                         <div class="buttons">
-                            {{-- <php dd($target); ?>  --}}
-{{-- いいね機能を実装していく --}}
+                            {{-- いいね機能 --}}
                             @if ($target_user_id == $user_id)
                             @else
-                            <form method="post" action="{{ route('likes.store') }}" style="display:inline;">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $user_id }}">
-                                <input type="hidden" name="target_id" value="{{ $target->id }}">
-                                <button type="submit" class="btn">
-                                {{-- {{ $target->likes->user_id; }} --}}
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                                </button>
-                            </form>
+                                @if ($target->is_liked_by_auth_user())
+                                    <form method="post" action="{{ route('likes.destroy', $target->id) }}"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="user_id" value="{{ $user_id }}">
+                                        <input type="hidden" name="target_id" value="{{ $target->id }}">
+
+                                        <button type="submit" class="btn">
+                                            <span class="material-symbols-outlined"
+                                                style=" font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48">
+                                                favorite
+                                            </span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="post" action="{{ route('likes.store') }}" style="display:inline;">
+                                        @csrf
+                                        <input type="hidden" name="user_id" value="{{ $user_id }}">
+                                        <input type="hidden" name="target_id" value="{{ $target->id }}">
+                                        <button type="submit" class="btn">
+                                            <span class="material-symbols-outlined">
+                                                favorite
+                                            </span>
+                                        </button>
+                                @endif
+                                </form>
                             @endif
-                            <span>{{ $target_user->name }}</span>
                         </div>
-
-
+                        {{ $target->likes->count() }}いいね
+                        <span>{{ $target_user->name }}</span>
                 </article>
-                {{-- @endforeach --}}
             @endforeach
             {{ $targets->links() }}
         @endif
-
     </section>
-
 @endsection

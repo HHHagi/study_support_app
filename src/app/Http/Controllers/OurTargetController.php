@@ -32,7 +32,6 @@ class OurTargetController extends Controller
         $PAGE_NUMBER = 5;
         $public_categories = PublicCategory::all();
         $targets = Target::where('is_private', "1")->with('likes')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
-
         return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }
 
@@ -63,9 +62,13 @@ class OurTargetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $target = Target::find($id);
+        $PAGE_NUMBER = 10;
+        $books = Book::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+        $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+        return view('/contents_views.our_targets_show', compact('target', 'books', 'tasks'));
     }
 
     /**

@@ -31,6 +31,6 @@ Route::resource('books', 'App\Http\Controllers\BookController', ['only' => ['ind
 Route::resource('tasks', 'App\Http\Controllers\TaskController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
 Route::resource('book_explanations', 'App\Http\Controllers\BookExplanationController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
 Route::resource('task_explanations', 'App\Http\Controllers\TaskExplanationController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
-Route::resource('our_targets', 'App\Http\Controllers\OurTargetController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
+Route::resource('our_targets', 'App\Http\Controllers\OurTargetController', ['only' => ['index', 'create', 'store', 'show', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
 Route::resource('likes', 'App\Http\Controllers\LikeController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1');
 

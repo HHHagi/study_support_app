@@ -286,21 +286,6 @@
                         </form>
                     </div>
 
-                    {{-- @endif --}}
-                    {{-- 以下はいいね機能 --}}
-                    {{-- <div>
-                        @if ($target->is_liked_by_auth_user())
-                            <a href="{{ route('target.unlike', ['id' => $target->id]) }}">
-                                <i class="fas fa-heart"></i>
-                            </a>
-                            <span>{{ $target->likes->count() }}</span>
-                        @else
-                            <a href="{{ route('target.like', ['id' => $target->id]) }}">
-                                <i class="far fa-heart"></i>
-                            </a>
-                            <span>{{ $target->likes->count() }}</span>
-                        @endif
-                    </div> --}}
                 </article>
             @endforeach
             {{ $targets->links() }}

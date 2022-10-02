@@ -9,6 +9,8 @@
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
         <button type="button" class="toggle_sort_form">ソート</button>
 
+        <h2>自分の目標一覧</h2>
+
         {{-- マイカテゴリがない初期状態 --}}
         @if (!$private_categories->first())
             <div>

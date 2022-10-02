@@ -3,8 +3,9 @@
 
 @section('content')
     <section>
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
+        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">自分の目標へ戻る</button>
         <button type="button" class="toggle_sort_form">ソート</button>
+        <h2>みんなの目標一覧</h2>
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">

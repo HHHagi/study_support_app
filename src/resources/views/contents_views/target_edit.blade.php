@@ -224,25 +224,26 @@
                             <p class="display_toggle">{{ $book->memo }}</p>
                             <button class="edit_memo display_toggle">メモを編集</button>
 
-                            <form class="hide display_toggle2" method="post" action="{{ route('books.update', $book->id) }}">
+                            <form class="hide display_toggle2" method="post"
+                                action="{{ route('books.update', $book->id) }}">
                                 @csrf
                                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                                 @method('PUT')
                                 @error('memo')
-                                <div>{{ $message }}</div>
+                                    <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
                                 <button type="submit">編集完了</button>
                             </form>
                         </div>
-                        @else
+                    @else
                         <div class="toggle-form toggle_memo">
                             <form method="post" action="{{ route('books.update', $book->id) }}">
                                 @csrf
                                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
                                 @method('PUT')
                                 @error('memo')
-                                <div>{{ $message }}</div>
+                                    <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
                                 <button type="submit">メモを追加</button>
@@ -306,10 +307,11 @@
                             <button type="submit">完了</button>
                         </form>
 
-
+                        @if (DB::table('book_explanations')->where('book_id', $book->id)->exists())
+                        これまで学んだこと
+                        @endif
                         @foreach ($book_explanations as $book_explanation)
                             @if ($book_explanation->book_id === $book->id)
-                                これまで学んだこと
                                 <div class="frame">
                                     <li class="js_count_explanation">{{ $book_explanation->content }}</li><br>
                                     <div class="buttons">
@@ -325,6 +327,7 @@
                                     </div>
                                 </div>
                             @endif
+
                             {{-- 編集フォーム --}}
                             <div class="toggle-form toggle_book">
                                 <form method="post"
@@ -337,6 +340,9 @@
                                 </form>
                             </div>
                         @endforeach
+
+                        最初に知っていたこと
+                        <li>{{ $book->first_knowledge }}</li>
 
                     </div>
 
@@ -410,35 +416,36 @@
                         </div>
                     </div>
                     {{-- メモの入力フォーム --}}
-                    @if($task->memo)
-                    <div class="toggle-form toggle_memo">
-                        <p class="display_toggle">{{ $task->memo }}</p>
-                        <button class="edit_memo display_toggle">メモを編集</button>
+                    @if ($task->memo)
+                        <div class="toggle-form toggle_memo">
+                            <p class="display_toggle">{{ $task->memo }}</p>
+                            <button class="edit_memo display_toggle">メモを編集</button>
 
-                        <form class="hide display_toggle2" method="post" action="{{ route('tasks.update', $task->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            @error('memo')
-                            <div>{{ $message }}</div>
-                            @enderror
-                            <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
-                            <button type="submit">編集完了</button>
-                        </form>
-                    </div>
+                            <form class="hide display_toggle2" method="post"
+                                action="{{ route('tasks.update', $task->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
+                                    <div>{{ $message }}</div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
+                                <button type="submit">編集完了</button>
+                            </form>
+                        </div>
                     @else
-                    <div class="toggle-form toggle_memo">
-                        <form method="post" action="{{ route('tasks.update', $task->id) }}">
-                            @csrf
-                            <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                            @method('PUT')
-                            @error('memo')
-                            <div>{{ $message }}</div>
-                            @enderror
-                            <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
-                            <button type="submit">メモを追加</button>
-                        </form>
-                    </div>
+                        <div class="toggle-form toggle_memo">
+                            <form method="post" action="{{ route('tasks.update', $task->id) }}">
+                                @csrf
+                                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
+                                @method('PUT')
+                                @error('memo')
+                                    <div>{{ $message }}</div>
+                                @enderror
+                                <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
+                                <button type="submit">メモを追加</button>
+                            </form>
+                        </div>
                     @endif
 
                     {{-- アウトプット編集フォーム --}}
@@ -498,10 +505,12 @@
                             <button type="submit">完了</button>
                         </form>
 
+                        @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
+                        これまで学んだこと
+                        @endif
 
                         @foreach ($task_explanations as $task_explanation)
                             @if ($task_explanation->task_id === $task->id)
-                                これまで学んだこと
                                 <div class="frame">
                                     <li>{{ $task_explanation->content }}</li><br>
                                     <div class="buttons">
@@ -531,6 +540,9 @@
                                 </form>
                             </div>
                         @endforeach
+
+                        最初に知っていたこと
+                        <li>{{ $book->first_knowledge }}</li>
 
                 </article>
             @endforeach

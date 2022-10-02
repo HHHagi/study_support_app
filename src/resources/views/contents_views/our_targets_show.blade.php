@@ -5,43 +5,46 @@
     <section>
         <h2>目標：{{ $target->title }}</h2>
         <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標へ戻る</button>
-        <button type="button" class="toggle_sort_form">ソート</button>
-        <div class="toggle-form toggle_private_category">
-            <form method="post" action="{{ route('private_categories.store') }}">
+        <button type="button" class="toggle_sort_form">自分の目標へコピーする</button>
+        {{-- 目標コピーフォーム --}}
+        <div class="sort_form">
+            <form method="post" action="{{ route('our_targets.store') }}">
                 @csrf
                 <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                <label>新規マイカテゴリ名</label><br>
-                @error('title')
+                <input type="hidden" name="title" value="{{ $target->title }}">
+                <input type="hidden" name="public_category_id" value="{{ $target->public_category_id }}">
+                {{-- マイカテゴリーを選んでもらう --}}
+                <label>マイカテゴリ</label>
+                @error('private_category_id')
                     <li>{{ $message }}</li>
                 @enderror
-                <input name="category">
-                <button type="submit">作成</button>
-            </form>
-        </div>
-        {{-- ソートするフォーム --}}
-        <div class="sort_form">
-            <form method="post" action="{{ route('targets.edit', $target->id) }}">
-                @csrf
-                @method('GET')
-                <input type="hidden" name="target_id" value="{{ $target->id }}"><br>
-                <div class="sort-item">
-                    <select name="is_done" class="sort_is_done">
-                        <option value="" selected>完了か未完了を選択</option>
-                        <option value="">どちらも</option>
-                        <option value="2">未完了</option>
-                        <option value="1">完了</option>
-                    </select><br>
-                </div>
-                <div class="sort-item">
-                    <select name="priority" class="sort_priority">
-                        <option value="" selected>重要度を選択</option>
-                        <option value="">すべて</option>
-                        <option value="1">高い</option>
-                        <option value="2">中</option>
-                        <option value="3">低い</option>
-                    </select><br>
-                </div>
-                <button type="submit">ソートを完了</button>
+                <select name="private_category_id">
+                        @foreach ($private_categories as $private_category)
+                            <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                        @endforeach
+                </select><br>
+                <label>目標期限</label>
+                @error('limit')
+                    <li>{{ $message }}</li>
+                @enderror
+                <input name="limit" type="date"><br>
+                <input type="hidden" name="is_private" value="0"> <br>
+                <input type="hidden" name="is_done" value="2"> <br>
+
+                    <article>
+                        <div class="frame">
+
+                                <label>今知っていること</label><br>
+                                @error('first_knowledge')
+                                    <li>{{ $message }}</li>
+                                @enderror
+                                <textarea name="first_knowledge"></textarea><br>
+
+                            </form>
+                        </div>
+
+                <button type="submit">コピーを実行</button>
+
             </form>
         </div>
 

@@ -38,6 +38,15 @@ class TargetController extends Controller
         $private_categories = PrivateCategory::where('user_id', $user_id)->get();
         $public_categories = PublicCategory::all();
 
+        // 目標を検索した際の処理
+        if ($request->target_title) {
+            $target_title = $request->target_title;
+            $targets = Target::where('user_id', $user_id)->where('title', 'LIKE', "%$target_title%")->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage')->appends(["ideaPage" => $request->input('ideaPage')]);
+            // CSRFトークンを再生成して、二重送信対策
+            $request->session()->regenerateToken();
+            return view('contents_views.targets', compact('targets', 'ideas', 'private_categories', 'public_categories'));
+        }
+
         if ($request->public_category_id) {
             $targets = Target::where('user_id', $user_id)->where('public_category_id', $request->public_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage')->appends(["ideaPage" => $request->input('ideaPage')]);
             if ($request->private_category_id) {
@@ -136,6 +145,18 @@ class TargetController extends Controller
         $PAGE_NUMBER = 10;
         $books = Book::withCount('book_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
         $tasks = Task::withCount('task_explanations')->where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+        $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
+        $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
+
+        if ($request->target_title) {
+            $target_title = $request->target_title;
+            $books = Book::withCount('book_explanations')->where('target_id', $id)->where('title', 'LIKE', "%$target_title%")->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
+            $tasks = Task::withCount('task_explanations')->where('target_id', $id)->where('title', 'LIKE', "%$target_title%")->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
+            // CSRFトークンを再生成して、二重送信対策
+            $request->session()->regenerateToken();
+            return view('contents_views.target_edit', compact('target', 'private_categories', 'books', 'tasks', 'book_explanations', 'task_explanations'));
+        }
+
         // $request->private_category_idを選択した場合 
         if ($request->private_category_id) {
             $books = Book::where('target_id', $id)->where('private_category_id', $request->private_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
@@ -269,8 +290,6 @@ class TargetController extends Controller
                     })->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
             }
         }
-        $book_explanations = BookExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
-        $task_explanations = TaskExplanation::where('target_id', $id)->orderBy('id', 'desc')->get();
         // CSRFトークンを再生成して、二重送信対策
         $request->session()->regenerateToken();
         return view('contents_views.target_edit', compact('target', 'private_categories', 'books', 'tasks', 'book_explanations', 'task_explanations'));

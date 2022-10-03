@@ -3,9 +3,11 @@
 
 @section('content')
     <section>
+        @if ($private_categories->first())
         <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標をみる</button>
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
+        {{-- <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button> --}}
         <button type="button" class="toggle_target_form">新しい目標をつくる</button>
+        @endif
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
         <button type="button" class="toggle_sort_form">ソート</button>
 

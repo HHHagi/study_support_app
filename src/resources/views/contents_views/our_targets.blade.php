@@ -5,6 +5,11 @@
     <section>
         <button type="button" onclick="location.href='{{ route('targets.index') }}' ">自分の目標へ戻る</button>
         <button type="button" class="toggle_sort_form">ソート</button>
+        目標を検索
+        <form method="GET" action="{{ route('our_targets.edit', 1) }}">
+        <input type="text" name="target_title">
+        <button type="submit">検索を実行</button>
+        </form>
         <h2>みんなの目標一覧</h2>
 
         {{-- ソートするフォーム --}}

@@ -4,7 +4,8 @@
 @section('content')
     <section>
         <button type="button" onclick="location.href='{{ route('targets.index') }}' ">自分の目標へ戻る</button>
-        <button type="button" class="toggle_sort_form">ソート</button>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">すべてを表示</button>
+        <button type="button" class="toggle_sort_form">ソート</button><br>
         目標を検索
         <form method="GET" action="{{ route('our_targets.edit', 1) }}">
         <input type="text" name="target_title">
@@ -14,25 +15,15 @@
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">
-            <form method="post" action="{{ route('targets.index') }}">
+            <form method="get" action="{{ route('our_targets.index') }}">
                 @csrf
                 @method('GET')
                 <div class="sort-item">
                     <select name="public_category_id" class="sort_public_category">
                         <option value="" selected>公式カテゴリを選択</option>
-                        <option value="">すべて</option>
                         @foreach ($public_categories as $public_category)
                             <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
                         @endforeach
-                    </select><br>
-                </div>
-
-                <div class="sort-item">
-                    <select name="is_done" class="sort_is_done">
-                        <option value="" selected>完了か未完了を選択</option>
-                        <option value="">どちらも</option>
-                        <option value="2">未完了</option>
-                        <option value="1">完了</option>
                     </select><br>
                 </div>
 

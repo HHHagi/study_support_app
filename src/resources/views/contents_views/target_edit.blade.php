@@ -5,10 +5,18 @@
     <section>
         <h2>目標：{{ $target->title }}</h2>
         <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button>
+        <button type="button" onclick="location.href='{{ route('targets.edit', $target->id) }}' ">すべてを表示</button>
         <button type="button" class="toggle_target_form">新しいインプット</button>
         <button type="button" class="toggle_task_form">新しいアウトプット</button>
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
-        <button type="button" class="toggle_sort_form">ソート</button>
+        <button type="button" class="toggle_sort_form">ソート</button><br>
+        
+        目標を検索
+        <form method="GET" action="{{ route('targets.edit', $target->id) }}">
+            <input type="text" name="target_title">
+            <button type="submit">検索を実行</button>
+        </form>
+
         <div class="toggle-form toggle_private_category">
             <form method="post" action="{{ route('private_categories.store') }}">
                 @csrf

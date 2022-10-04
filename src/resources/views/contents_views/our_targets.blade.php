@@ -15,13 +15,12 @@
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">
-            <form method="post" action="{{ route('targets.index') }}">
+            <form method="get" action="{{ route('our_targets.index') }}">
                 @csrf
                 @method('GET')
                 <div class="sort-item">
                     <select name="public_category_id" class="sort_public_category">
                         <option value="" selected>公式カテゴリを選択</option>
-                        <option value="">すべて</option>
                         @foreach ($public_categories as $public_category)
                             <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
                         @endforeach

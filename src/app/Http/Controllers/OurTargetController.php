@@ -26,13 +26,22 @@ class OurTargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user_id = Auth::user()->id;
         $users = User::all();
         $PAGE_NUMBER = 5;
         $public_categories = PublicCategory::all();
-        $targets = Target::where('is_private', "1")->with('likes')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+        // dd($request->public_category_id);
+        if ($request->public_category_id) {
+            if ($request->public_category_id == 1) {
+                $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+                return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
+            }
+            $targets = Target::where('is_private', "1")->with('likes')->where('public_category_id', $request->public_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+            return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
+        }
+        $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
         return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }
 
@@ -132,6 +141,9 @@ class OurTargetController extends Controller
         $PAGE_NUMBER = 5;
         $public_categories = PublicCategory::all();
         $target_title = $request->target_title;
+
+        dd($request->public_category_id);
+
         $targets = Target::where('is_private', "1")->where('title', 'LIKE', "%$target_title%")->with('likes')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
         return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }

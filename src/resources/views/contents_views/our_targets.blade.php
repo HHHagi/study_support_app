@@ -16,7 +16,6 @@
         {{-- ソートするフォーム --}}
         <div class="sort_form">
             <form method="get" action="{{ route('our_targets.index') }}">
-                @csrf
                 @method('GET')
                 <div class="sort-item">
                     <select name="public_category_id" class="sort_public_category">

@@ -36,9 +36,11 @@ class OurTargetController extends Controller
         if ($request->public_category_id) {
             if ($request->public_category_id == 1) {
                 $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+        $request->session()->regenerateToken();
                 return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
             }
             $targets = Target::where('is_private', "1")->with('likes')->where('public_category_id', $request->public_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+        $request->session()->regenerateToken();
             return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
         }
         $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');

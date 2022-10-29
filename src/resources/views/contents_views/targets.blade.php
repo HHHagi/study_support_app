@@ -4,10 +4,10 @@
 @section('content')
     <section>
         @if ($private_categories->first())
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標をみる</button>
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">すべてを表示</button>
-        {{-- <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button> --}}
-        <button type="button" class="toggle_target_form">新しい目標をつくる</button>
+            <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標をみる</button>
+            <button type="button" onclick="location.href='{{ route('targets.index') }}' ">すべてを表示</button>
+            {{-- <button type="button" onclick="location.href='{{ route('targets.index') }}' ">目標一覧へ戻る</button> --}}
+            <button type="button" class="toggle_target_form">新しい目標をつくる</button>
         @endif
         <button type="button" class="toggle_private_category_form">マイカテゴリを作成</button>
         <button type="button" class="toggle_sort_form">ソート</button><br>
@@ -160,7 +160,8 @@
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="is_done" value="2" class="btn">
+                                <input type="hidden" name="is_done" value="2">
+                                <button type="submit" class="btn">
                                     <span class="material-symbols-outlined">
                                         check_box
                                     </span>
@@ -170,7 +171,8 @@
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="is_done" value="1" class="btn">
+                                <input type="hidden" name="is_done" value="1">
+                                <button type="submit" class="btn">
                                     <span class="material-symbols-outlined">
                                         check_box_outline_blank
                                     </span>
@@ -180,12 +182,13 @@
                         {{-- 目標タイトルリンク表示 --}}
                         <span><a href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a></span>
                         <div class="buttons">
-                            {{-- エラー箇所！ --}}
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
                                 @if ($target->is_done === 2)
-                                    <button type="submit" name="is_done" value="1" class="btn">完了</button>
+                                    <input type="hidden" name="is_done" value="1">
+                                    <button type="submit" name="is_done" class="btn">完了</button>
+                                @else
                                 @endif
                             </form>
                         </div>
@@ -201,7 +204,7 @@
                                 <button type="submit" class="btn btn--orange btn_delete">削除</button>
                             </form>
                         </div>
-                        <div>
+                        <div style="width: 120px">
                             @if ($target->limit !== null)
                                 {{ $target->limit->format('Y/m/d') }}まで
                             @else

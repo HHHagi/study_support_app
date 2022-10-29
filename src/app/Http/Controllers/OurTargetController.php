@@ -127,7 +127,7 @@ class OurTargetController extends Controller
         $PAGE_NUMBER = 2;
         $books = Book::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'bookPage')->appends(["taskPage" => $request->input('taskPage')]);
         $tasks = Task::where('target_id', $id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'taskPage')->appends(["bookPage" => $request->input('bookPage')]);
-        return view('/contents_views.our_targets_show', compact('target', 'books', 'tasks', 'private_categories'));
+        return view('/contents_views.our_targets_show', compact('user_id', 'target', 'books', 'tasks', 'private_categories'));
     }
 
     /**

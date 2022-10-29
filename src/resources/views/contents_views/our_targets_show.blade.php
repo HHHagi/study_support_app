@@ -5,7 +5,9 @@
     <section>
         <h2>目標：{{ $target->title }}</h2>
         <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標へ戻る</button>
+        @if($target->user_id !== $user_id)
         <button type="button" class="toggle_sort_form">自分の目標へコピーする</button>
+        @endif
         {{-- 目標コピーフォーム --}}
         <div class="sort_form">
             <form method="post" action="{{ route('our_targets.store') }}">

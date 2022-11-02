@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: composer-update
+          name: composer-update --1
           working_directory: src 
           command: sudo composer self-update
       - run: 

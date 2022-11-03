@@ -56,6 +56,7 @@ jobs:
           command: |
             ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd /home/webapp/study_support_app/src && \
               git pull origin main && \
+              composer self-update \
               composer install -n --no-dev --prefer-dist && \
               npm ci && \
               npm run prod && \

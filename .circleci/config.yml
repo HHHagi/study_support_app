@@ -6,13 +6,21 @@ jobs:
     steps:
       - checkout
       - run:
-          name: composer-update --1
+          name: composer-update
           working_directory: src 
           command: sudo composer self-update
+      - restore_cache:
+          working_directory: src
+          key: composer-v1-{{ checksum "composer.lock" }}
       - run: 
           name: composer-install
           working_directory: src 
           command: composer install -n --prefer-dist
+      - save_cache:
+          working_directory: src
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
       - run: 
           name: npm-ci
           working_directory: src

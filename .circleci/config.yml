@@ -44,3 +44,32 @@ jobs:
           name: php test
           working_directory: src
           command: vendor/bin/phpunit
+
+  deploy:
+    docker:
+      - image: circleci/php:8.0-node-browsers
+    steps:
+      - add_ssh_keys
+      - run:
+          name: deploy
+          command: |
+            ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd /home/webapp/study_support_app/src && \
+              git pull origin main && \
+              composer install -n --no-dev --prefer-dist && \
+              npm ci && \
+              npm run prod && \
+              php artisan migrate --force && \
+              php artisan config:cache"
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main

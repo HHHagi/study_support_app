@@ -52,6 +52,7 @@ jobs:
       - add_ssh_keys
       - run:
           name: deploy
+          working_directory: src
           command: |
             ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd /home/webapp/study_support_app/src && \
               git pull origin main && \

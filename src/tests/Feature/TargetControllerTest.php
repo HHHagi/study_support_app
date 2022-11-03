@@ -31,7 +31,7 @@ class TargetControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->get(route('targets.index'));
 
-        $response->assertStatus(200)
+        $response->assertStatus(300)
             ->assertViewIs('contents_views.targets');
     }
 }

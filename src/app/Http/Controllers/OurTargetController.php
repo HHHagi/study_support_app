@@ -144,8 +144,6 @@ class OurTargetController extends Controller
         $public_categories = PublicCategory::all();
         $target_title = $request->target_title;
 
-        dd($request->public_category_id);
-
         $targets = Target::where('is_private', "1")->where('title', 'LIKE', "%$target_title%")->with('likes')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
         return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }

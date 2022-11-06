@@ -21,7 +21,7 @@
 
         {{-- マイカテゴリがない初期状態 --}}
         @if (!$private_categories->first())
-            <div>
+            <div class="new-my-category">
                 <form method="post" action="{{ route('private_categories.store') }}">
                     @csrf
                     <label>新規マイカテゴリ名</label><br>
@@ -29,7 +29,7 @@
                         <li>{{ $message }}</li>
                     @enderror
                     <input name="category">
-                    <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">作成</button>
+                    <button type="submit" class="btn btn-outline-dark fs-7" data-mdb-ripple-color="dark">作成</button>
                 </form>
             </div>
         @endif
@@ -146,6 +146,7 @@
         @endif
 
 
+        @if ($private_categories->first())
         <div class="serch-box">
             <form method="GET" action="{{ route('targets.index') }}">
                 <label>目標を検索
@@ -154,6 +155,7 @@
                 <button type="submit" class="btn btn-outline-dark btn-sm fs-6" data-mdb-ripple-color="dark">検索を実行</button>
             </form>
         </div>
+        @endif
 
         <h3 class="index-title">自分の目標一覧</h3>
 

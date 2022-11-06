@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -41,20 +42,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    public function ideas(){
+
+    public function ideas()
+    {
         return $this->hasMany(Idea::class);
     }
-    public function targets(){
+    public function targets()
+    {
         return $this->hasMany(Target::class);
     }
-    public function likes(){
+    public function likes()
+    {
         return $this->hasMany(Like::class);
     }
-    public function comments(){
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
-    public function private_categories(){
+    public function private_categories()
+    {
         return $this->hasMany(PrivateCategory::class);
     }
+
 }

@@ -1,6 +1,7 @@
 
 section{
-    border:4px solid skyblue;
+    border:3px solid #CCCCCC;
+    /* box-shadow: 2px 2px 4px gray; */
     width: 1100px;
     margin-left: auto;
     margin-right: auto;
@@ -8,7 +9,8 @@ section{
   }
 
 article{
-    border:4px solid skyblue;
+    /* border:4px solid skyblue; */
+    box-shadow: 2px 2px 4px gray;
     width: 1050px;
     margin-left: auto;
     margin-right: auto;
@@ -85,4 +87,31 @@ a.btn--blue:hover {
 
 .hide{
   display: none;
+}
+
+.centering_item{
+  vertical-align:  middle;
+}
+
+.serch-box{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.index-title{
+  margin-bottom: 15px;
+}
+
+.h3-css{
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.first-knowledge{
+  margin-top: 20px;
+
+}
+
+.good-button-right{
+  width: 160px;
 }

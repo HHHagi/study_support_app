@@ -3,10 +3,12 @@
 
 @section('content')
     <section>
-        <h2>目標：{{ $target->title }}</h2>
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">みんなの目標へ戻る</button>
+        <h3 class="h3-css">目標：{{ $target->title }}</h3>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6"
+        data-mdb-ripple-color="dark">みんなの目標へ戻る</button>
         @if($target->user_id !== $user_id)
-        <button type="button" class="toggle_sort_form">自分の目標へコピーする</button>
+        <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6"
+        data-mdb-ripple-color="dark">自分の目標へコピーする</button>
         @endif
         {{-- 目標コピーフォーム --}}
         <div class="sort_form">
@@ -45,7 +47,8 @@
                             </form>
                         </div>
 
-                <button type="submit">コピーを実行</button>
+                <button type="submit" class="btn btn-outline-dark fs-6"
+                data-mdb-ripple-color="dark">コピーを実行</button>
 
             </form>
         </div>

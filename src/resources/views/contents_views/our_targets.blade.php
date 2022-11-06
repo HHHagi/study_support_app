@@ -3,15 +3,14 @@
 
 @section('content')
     <section>
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' ">自分の目標へ戻る</button>
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' ">すべてを表示</button>
-        <button type="button" class="toggle_sort_form">ソート</button><br>
-        目標を検索
-        <form method="GET" action="{{ route('our_targets.edit', 1) }}">
-        <input type="text" name="target_title">
-        <button type="submit">検索を実行</button>
-        </form>
-        <h2>みんなの目標一覧</h2>
+        <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6"
+            data-mdb-ripple-color="dark">自分の目標一覧</button>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6"
+            data-mdb-ripple-color="dark">すべてを表示</button>
+        <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6"
+            data-mdb-ripple-color="dark">ソート</button><br>
+
+
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">
@@ -26,9 +25,22 @@
                     </select><br>
                 </div>
 
-                <button type="submit">ソートを完了</button>
+                <button type="submit" class="btn btn-outline-dark fs-6"
+                data-mdb-ripple-color="dark">ソートを完了</button>
             </form>
         </div>
+
+        <div class="serch-box">
+            <form method="GET" action="{{ route('our_targets.edit', 1) }}">
+                <label>目標を検索
+                    <input type="text" name="target_title">
+                </label>
+                <button type="submit" class="btn btn-outline-dark fs-6"
+                data-mdb-ripple-color="dark">検索を実行</button>
+            </form>
+        </div>
+
+        <h3 class="index-title">みんなの目標一覧</h3>
 
         @if ($targets->isEmpty())
             {{-- 目標データがDBにない場合の表示内 --}}
@@ -58,7 +70,7 @@
                                         <input type="hidden" name="user_id" value="{{ $user_id }}">
                                         <input type="hidden" name="target_id" value="{{ $target->id }}">
 
-                                        <button type="submit" class="btn">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
                                             <span class="material-symbols-outlined"
                                                 style=" font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48">
                                                 favorite
@@ -70,7 +82,7 @@
                                         @csrf
                                         <input type="hidden" name="user_id" value="{{ $user_id }}">
                                         <input type="hidden" name="target_id" value="{{ $target->id }}">
-                                        <button type="submit" class="btn">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
                                             <span class="material-symbols-outlined">
                                                 favorite
                                             </span>
@@ -79,8 +91,10 @@
                                 </form>
                             @endif
                         </div>
+                        <div class="good-button-right">
                         {{ $target->likes->count() }}いいね
                         <span>{{ $target_user->name }}</span>
+                        </div>
                 </article>
             @endforeach
             {{ $targets->links() }}

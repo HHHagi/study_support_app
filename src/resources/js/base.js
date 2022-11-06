@@ -94,9 +94,7 @@ $(function () {
 
 $(function () {
     $('.edit_memo').click(function () {
-        $(this).prev('.display_toggle').addClass("hide");
-        $(this).addClass('hide');
-        $(this).siblings('.display_toggle2').removeClass("hide");
+        $(this).nextAll('.display_toggle2').slideToggle();
     });
 });
 

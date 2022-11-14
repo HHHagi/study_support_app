@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware(['verified'])->group(function (){
+// Route::middleware(['verified'])->group(function (){
     
 Route::get('/our_targets', [App\Http\Controllers\OurTargetController::class, 'index'])->middleware('throttle:10, 1');
 
@@ -35,4 +35,4 @@ Route::resource('task_explanations', 'App\Http\Controllers\TaskExplanationContro
 Route::resource('our_targets', 'App\Http\Controllers\OurTargetController', ['only' => ['index', 'create', 'store', 'show', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1')->middleware('auth');
 Route::resource('likes', 'App\Http\Controllers\LikeController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1')->middleware('auth');
 
-});
+// });

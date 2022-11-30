@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <section>
+    <section class="container">
         <h3 class="h3-css">目標：{{ $target->title }}</h3>
         <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">目標一覧</button>
         <button type="button" onclick="location.href='{{ route('targets.edit', $target->id) }}' " class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">すべてを表示</button>
@@ -16,7 +16,7 @@
                 <label>目標を検索
                     <input type="text" name="target_title">
                 </label>
-                <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">検索を実行</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">検索を実行</button>
             </form>
         </div>
 
@@ -166,7 +166,7 @@
 
 
     {{-- インプットを表示するエリア --}}
-    <section>
+    <section class="container">
         インプット一覧
         {{-- データがDBにない場合の表示内 --}}
         @if ($books->isEmpty())
@@ -190,7 +190,7 @@
                         <span>{{ $book->title }}</span>
 
                         <div class="buttons">
-                            <button class="btn toggle_done_form btn-primary">
+                            <button class="btn toggle_done_form btn-primary btn-css">
                                 @if (DB::table('book_explanations')->where('book_id', $book->id)->exists())
                                     復習
                                 @else
@@ -199,9 +199,9 @@
                             </button>
                         </div>
 
-                        <div class=""><button class="btn toggle_memo_form btn-primary">メモ</button></div>
+                        <div class=""><button class="btn toggle_memo_form btn-primary btn-css">メモ</button></div>
                         <div class="">
-                            <button class="btn btn-primary toggle_target_edit_form">編集</button>
+                            <button class="btn btn-primary toggle_target_edit_form btn-css">編集</button>
                         </div>
                         <div class="">
                             <form style="display: inline;" method="post"
@@ -209,7 +209,7 @@
                                 @csrf
                                 <input type="hidden" name="target_id" value="{{ $target->id }}">
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-primary btn_delete">削除</button>
+                                <button type="submit" class="btn btn-primary btn_delete btn-css">削除</button>
                             </form>
                         </div>
 
@@ -365,7 +365,7 @@
 
 
     {{-- アウトプットを表示するエリア --}}
-    <section>
+    <section class="container">
         アウトプット一覧
         {{-- データがDBにない場合の表示内 --}}
         @if ($tasks->isEmpty())
@@ -389,7 +389,7 @@
                         <span>{{ $task->title }}</span>
                         {{-- 編集中 --}}
                         <div class="buttons">
-                            <button class="btn toggle_done_form btn-primary">
+                            <button class="btn toggle_done_form btn-primary btn-css">
                                 @if (DB::table('task_explanations')->where('task_id', $task->id)->exists())
                                     復習
                                 @else
@@ -398,9 +398,9 @@
                             </button>
                         </div>
 
-                        <div class=""><button class="btn toggle_memo_form btn-primary">メモ</button></div>
+                        <div class=""><button class="btn toggle_memo_form btn-primary btn-css">メモ</button></div>
                         <div class="">
-                            <button class="btn btn-primary toggle_target_edit_form">編集</button>
+                            <button class="btn btn-primary toggle_target_edit_form btn-css">編集</button>
                         </div>
                         <div class="">
                             <form style="display: inline-block;" method="post"
@@ -408,7 +408,7 @@
                                 @csrf
                                 <input type="hidden" name="target_id" value="{{ $target->id }}">
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-primary btn_delete">削除</button>
+                                <button type="submit" class="btn btn-primary btn_delete btn-css">削除</button>
                             </form>
                         </div>
 

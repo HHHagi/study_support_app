@@ -11,7 +11,7 @@ section{
 article{
     /* border:4px solid skyblue; */
     box-shadow: 2px 2px 4px gray;
-    width: 1050px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
@@ -118,4 +118,28 @@ a.btn--blue:hover {
 
 .new-my-category{
   margin-top: 15px;
+}
+
+.button-login{
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.register-form{
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+
+.target-search-input{
+  margin-bottom: 5px;
+}
+
+.btn-css{
+  margin-right: 3px;
+}
+
+.idea-button{
+  margin-bottom: 8px;
 }

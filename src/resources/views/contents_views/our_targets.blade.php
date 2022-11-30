@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <section>
+    <section class="container">
         <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6"
             data-mdb-ripple-color="dark">自分の目標一覧</button>
         <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6"
@@ -13,30 +13,31 @@
 
 
         {{-- ソートするフォーム --}}
-        <div class="sort_form">
+        <div class="sort_form mt-2">
             <form method="get" action="{{ route('our_targets.index') }}">
                 @method('GET')
-                <div class="sort-item">
+                <div class="sort-item mb-1">
                     <select name="public_category_id" class="sort_public_category">
                         <option value="" selected>公式カテゴリを選択</option>
                         @foreach ($public_categories as $public_category)
                             <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
                         @endforeach
-                    </select><br>
+                    </select>
                 </div>
-
-                <button type="submit" class="btn btn-outline-dark fs-6"
+                <br>
+                <button type="submit" class="btn btn-outline-dark btn-sm"
                 data-mdb-ripple-color="dark">ソートを完了</button>
             </form>
         </div>
 
         <div class="serch-box">
             <form method="GET" action="{{ route('our_targets.edit', 1) }}">
-                <label>目標を検索
-                    <input type="text" name="target_title">
-                </label>
-                <button type="submit" class="btn btn-outline-dark fs-6"
-                data-mdb-ripple-color="dark">検索を実行</button>
+                <div class="mb-3">
+                    <label for="target-serch" class="form-label">目標を検索</label>
+                    <input type="text" name="target_title" class="form-control target-search-input" id="target-serch">
+                    <button type="submit" class="btn btn-outline-dark btn-sm"
+                        data-mdb-ripple-color="dark">検索を実行</button>
+                </div>
             </form>
         </div>
 

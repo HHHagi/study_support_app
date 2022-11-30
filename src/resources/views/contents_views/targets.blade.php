@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <section>
+    <section class="container pt-2">
         @if ($private_categories->first())
             <button type="button" onclick="location.href='{{ route('our_targets.index') }}' "
                 class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">みんなの目標をみる</button>
@@ -82,8 +82,7 @@
                     </select><br>
                 </div>
 
-                <button type="submit" class="btn btn-outline-dark fs-6"
-                data-mdb-ripple-color="dark">ソートを完了</button>
+                <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">ソートを完了</button>
             </form>
         </div>
 
@@ -147,14 +146,17 @@
 
 
         @if ($private_categories->first())
-        <div class="serch-box">
-            <form method="GET" action="{{ route('targets.index') }}">
-                <label>目標を検索
-                    <input type="text" name="target_title">
-                </label>
-                <button type="submit" class="btn btn-outline-dark btn-sm fs-6" data-mdb-ripple-color="dark">検索を実行</button>
-            </form>
-        </div>
+            <div class="serch-box">
+                <form method="GET" action="{{ route('targets.index') }}">
+                    <div class="mb-3">
+                        <label for="target-serch" class="form-label">目標を検索</label>
+                        <input type="text" name="target_title" class="form-control target-search-input"
+                            id="target-serch">
+                        <button type="submit" class="btn btn-outline-dark btn-sm btn-sm"
+                            data-mdb-ripple-color="dark">検索を実行</button>
+                    </div>
+                </form>
+            </div>
         @endif
 
         <h3 class="index-title">自分の目標一覧</h3>
@@ -196,27 +198,30 @@
                         {{-- 目標タイトルリンク表示 --}}
                         <a style="vertical-align:middle;,display:inline;"
                             href="{{ route('targets.edit', $target->id) }}">{{ $target->title }}</a>
+
                         <div class="buttons">
                             <form method="post" action="{{ route('targets.update', $target->id) }}">
                                 @csrf
                                 @method('PUT')
                                 @if ($target->is_done === 2)
                                     <input type="hidden" name="is_done" value="1">
-                                    <button type="submit" name="is_done" class="btn btn-primary">完了</button>
+                                    <button type="submit" name="is_done"
+                                        class="btn btn-primary mb-3 btn-css">完了</button>
                                 @else
                                 @endif
                             </form>
                         </div>
-                        <div class=""><button class="btn btn-primary toggle_memo_form">メモ</button></div>
+                        <div class=""><button class="btn btn-primary mb-3 toggle_memo_form btn-css">メモ</button>
+                        </div>
                         <div class="">
-                            <button class="btn btn-primary toggle_target_edit_form">編集</button>
+                            <button class="btn btn-primary mb-3 toggle_target_edit_form btn-css">編集</button>
                         </div>
                         <div class="">
                             <form style="display: inline-block;" method="post"
                                 action="{{ route('targets.destroy', $target->id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-primary btn_delete">削除</button>
+                                <button type="submit" class="btn btn-primary mb-3 btn_delete btn-css">削除</button>
                             </form>
                         </div>
                         <div style="width: 120px">
@@ -230,7 +235,7 @@
                     @if ($target->memo)
                         <div class="toggle-form toggle_memo">
                             <p class="display_toggle">{{ $target->memo }}</p>
-                            <button class="edit_memo display_toggle btn btn-outline-dark fs-6"
+                            <button class="edit_memo display_toggle btn btn-outline-dark btn-sm mb-2"
                                 data-mdb-ripple-color="dark">メモを編集</button>
 
                             <form class="hide display_toggle2" method="post"
@@ -242,7 +247,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm mb-2"
                                     data-mdb-ripple-color="dark">編集完了</button>
                             </form>
                         </div>
@@ -256,7 +261,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $target->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm mb-2"
                                     data-mdb-ripple-color="dark">メモを追加</button>
                             </form>
                         </div>
@@ -314,7 +319,7 @@
                             <input style="display: inline" type="hidden" name="is_private" value="0"> <br>
                             <input style="display: inline" type="checkbox" name="is_private" value="1"> <br>
 
-                            <button type="submit" class="btn btn-outline-dark fs-6"
+                            <button type="submit" class="btn btn-outline-dark btn-sm mb-2"
                                 data-mdb-ripple-color="dark">編集完了</button>
                         </form>
                     </div>
@@ -324,10 +329,10 @@
             {{ $targets->links() }}
         @endif
     </section>
-    <section>
 
+    <section class="container pt-2">
         {{-- エラー箇所！バリデーションを設定すること --}}
-        <button type="button" onclick="" class="create toggle_idea_form btn btn-outline-dark fs-6"
+        <button type="button" onclick="" class="create toggle_idea_form btn btn-outline-dark fs-6 idea-button"
             data-mdb-ripple-color="dark">考察を追加</button>
         <div class="toggle-form toggle_idea">
             <form method="post" action="{{ route('ideas.store') }}">
@@ -337,7 +342,7 @@
                 @enderror
                 <label>考察</label><br>
                 <textarea name="idea"></textarea><br>
-                <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">完了</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">完了</button>
             </form>
         </div>
         @if ($ideas->isEmpty())
@@ -368,7 +373,7 @@
                             @method('PUT')
                             <label>考察</label><br>
                             <textarea name="idea">{{ old('idea') ?: $idea->idea }}</textarea><br>
-                            <button type="submit" class="btn btn-outline-dark fs-6"
+                            <button type="submit" class="btn btn-outline-dark btn-sm mb-2"
                                 data-mdb-ripple-color="dark">編集完了</button>
                         </form>
                     </div>

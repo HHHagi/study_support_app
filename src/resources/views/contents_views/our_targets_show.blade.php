@@ -9,7 +9,7 @@
                 class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">みんなの目標へ戻る</button>
             @if ($target->user_id !== $user_id)
                 <button type="button" class="toggle_sort_form_copy btn btn-outline-dark fs-6"
-                    data-mdb-ripple-color="dark">自分の目標へコピーする</button>
+                    data-mdb-ripple-color="dark">自分の目標へコピーする </button>
             @endif
         </div>
         {{-- 目標コピーフォーム --}}

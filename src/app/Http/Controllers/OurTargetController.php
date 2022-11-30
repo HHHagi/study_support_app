@@ -85,7 +85,7 @@ class OurTargetController extends Controller
                 $data = [
                     'target_id' => $last_insert_target_id,
                     'title' => $book->title,
-                    'first_knowledge' => $request->first_knowledge,
+                    // 'first_knowledge' => $request->first_knowledge,
                     'priority' => '2',
                     'is_done' => '2',
                     'private_category_id' => $request->private_category_id,
@@ -96,7 +96,7 @@ class OurTargetController extends Controller
                 $data = [
                     'target_id' => $last_insert_target_id,
                     'title' => $task->title,
-                    'first_knowledge' => $request->first_knowledge,
+                    // 'first_knowledge' => $request->first_knowledge,
                     'priority' => '2',
                     'is_done' => '2',
                     'private_category_id' => $request->private_category_id,

@@ -104,3 +104,9 @@ $(function(){
       $("button[type='submit']").prop("disabled", true);
     });
   });
+
+  $(function () {
+    $('.toggle_sort_form_copy').click(function () {
+        $(this).parent().nextAll('.sort_form').slideToggle();
+    });
+});

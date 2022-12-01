@@ -3,11 +3,11 @@
 
 @section('content')
     <section class="container">
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6"
+        <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6 mt-2"
             data-mdb-ripple-color="dark">自分の目標一覧</button>
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6"
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6 mt-2"
             data-mdb-ripple-color="dark">すべてを表示</button>
-        <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6"
+        <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6 mt-2"
             data-mdb-ripple-color="dark">ソート</button><br>
 
 

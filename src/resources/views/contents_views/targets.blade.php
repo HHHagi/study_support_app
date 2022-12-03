@@ -35,7 +35,7 @@
         @endif
         {{-- マイカテゴリが存在する場合の処理 --}}
         @if ($private_categories->first())
-            <div class="toggle-form toggle_private_category">
+            <div class="toggle-form toggle_private_category mt-2">
                 <form method="post" action="{{ route('private_categories.store') }}">
                     @csrf
                     <label>新規マイカテゴリ名</label><br>
@@ -43,14 +43,14 @@
                         <li>{{ $message }}</li>
                     @enderror
                     <input name="category">
-                    <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">作成</button>
+                    <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">作成</button>
                 </form>
             </div>
         @endif
 
         {{-- ソートするフォーム --}}
         <div class="sort_form">
-            <form method="post" action="{{ route('targets.index') }}">
+            <form method="post" action="{{ route('targets.index') }}" class="mt-2">
                 @csrf
                 @method('GET')
                 <div class="sort-item">
@@ -82,13 +82,13 @@
                     </select><br>
                 </div>
 
-                <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">ソートを完了</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">ソートを完了</button>
             </form>
         </div>
 
         {{-- 目標の入力フォーム --}}
         <div class="toggle-form toggle_target">
-            <form method="post" action="{{ route('targets.store') }}">
+            <form method="post" action="{{ route('targets.store') }}" class="mt-2">
                 @csrf
                 <label>目標</label><br>
                 @error('title')
@@ -130,12 +130,12 @@
                 @error('public')
                     <li>{{ $message }}</li>
                 @enderror
-                <input type="hidden" name="is_private" value="0"> <br>
+                <input type="hidden" name="is_private" value="0">
                 <input type="checkbox" name="is_private" value="1" checked><br>
 
-                <input type="hidden" name="is_done" value="2"> <br>
+                <input type="hidden" name="is_done" value="2">
 
-                <button type="submit" class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">完了</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">完了</button>
             </form>
         </div>
 
@@ -177,7 +177,7 @@
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="is_done" value="2">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-sm" style="border: none;">
                                     <span class="material-symbols-outlined">
                                         check_box
                                     </span>
@@ -188,7 +188,7 @@
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="is_done" value="1">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-sm" style="border: none;">
                                     <span class="material-symbols-outlined">
                                         check_box_outline_blank
                                     </span>

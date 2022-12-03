@@ -149,10 +149,10 @@
             <div class="serch-box">
                 <form method="GET" action="{{ route('targets.index') }}">
                     <div class="mb-3">
-                        <label for="target-serch" class="form-label">目標を検索</label>
-                        <input type="text" name="target_title" class="form-control target-search-input"
-                            id="target-serch">
-                        <button type="submit" class="btn btn-outline-dark btn-sm btn-sm"
+                        <label for="target-search" class="form-label">目標を検索</label>
+                        <textarea type="text" name="target_title" class="target-search-input"
+                            id="target-search"></textarea>
+                        <button type="submit" class="btn btn-outline-dark btn-sm btn-sm button-search"
                             data-mdb-ripple-color="dark">検索を実行</button>
                     </div>
                 </form>

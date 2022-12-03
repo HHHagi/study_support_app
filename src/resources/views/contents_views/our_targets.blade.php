@@ -5,8 +5,8 @@
     <section class="container">
         <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6 mt-2"
             data-mdb-ripple-color="dark">自分の目標一覧</button>
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' " class="btn btn-outline-dark fs-6 mt-2"
-            data-mdb-ripple-color="dark">すべてを表示</button>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' "
+            class="btn btn-outline-dark fs-6 mt-2" data-mdb-ripple-color="dark">すべてを表示</button>
         <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6 mt-2"
             data-mdb-ripple-color="dark">ソート</button><br>
 
@@ -25,8 +25,7 @@
                     </select>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-outline-dark btn-sm"
-                data-mdb-ripple-color="dark">ソートを完了</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">ソートを完了</button>
             </form>
         </div>
 
@@ -34,9 +33,8 @@
             <form method="GET" action="{{ route('our_targets.edit', 1) }}">
                 <div class="mb-3">
                     <label for="target-serch" class="form-label">目標を検索</label>
-                    <input type="text" name="target_title" class="form-control target-search-input" id="target-serch">
-                    <button type="submit" class="btn btn-outline-dark btn-sm"
-                        data-mdb-ripple-color="dark">検索を実行</button>
+                    <textarea type="text" name="target_title" class="target-search-input" id="target-serch"></textarea>
+                    <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">検索を実行</button>
                 </div>
             </form>
         </div>
@@ -76,6 +74,7 @@
                                                 style=" font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48">
                                                 favorite
                                             </span>
+                                            {{ $target->likes->count() }}
                                         </button>
                                     </form>
                                 @else
@@ -93,8 +92,7 @@
                             @endif
                         </div>
                         <div class="good-button-right">
-                        {{ $target->likes->count() }}いいね
-                        <span>{{ $target_user->name }}</span>
+                            <span>{{ $target_user->name }}</span>
                         </div>
                 </article>
             @endforeach

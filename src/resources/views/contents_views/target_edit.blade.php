@@ -19,10 +19,11 @@
 
         <div class="serch-box">
             <form method="GET" action="{{ route('targets.edit', $target->id) }}">
-                <label>目標を検索
-                    <input type="text" name="target_title">
-                </label>
-                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">検索を実行</button>
+                <div class="mb-3">
+                <label for="target-search">目標を検索</label>
+                    <textarea type="text" id="target-search" name="target_title" class="target-search-input"></textarea>       
+                <button type="submit" class="btn btn-outline-dark btn-sm button-search" data-mdb-ripple-color="dark">検索を実行</button>
+            </div>
             </form>
         </div>
 
@@ -172,7 +173,7 @@
 
     {{-- インプットを表示するエリア --}}
     <section class="container">
-        インプット一覧
+        <div class="mt-2 mb-1">インプット一覧</div>
         {{-- データがDBにない場合の表示内 --}}
         @if ($books->isEmpty())
             <article>
@@ -237,7 +238,7 @@
                     @if ($book->memo)
                         <div class="toggle-form toggle_memo">
                             <p class="display_toggle">{{ $book->memo }}</p>
-                            <button class="edit_memo display_toggle btn btn-outline-dark fs-6"
+                            <button class="edit_memo display_toggle btn btn-outline-dark btn-sm"
                                 data-mdb-ripple-color="dark">メモを編集</button>
 
                             <form class="hide display_toggle2" method="post"
@@ -249,7 +250,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm"
                                     data-mdb-ripple-color="dark">編集完了</button>
                             </form>
                         </div>
@@ -263,7 +264,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $book->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm"
                                     data-mdb-ripple-color="dark">メモを追加</button>
                             </form>
                         </div>
@@ -323,7 +324,7 @@
                             <input type="hidden" name="book_id" value="{{ $book->id }}">
                             <input type="hidden" name="is_done" value="1">
                             <textarea name="content">{{ old('title') }}</textarea><br>
-                            <button type="submit" class="btn btn-outline-dark fs-6"
+                            <button type="submit" class="btn btn-outline-dark btn-sm"
                                 data-mdb-ripple-color="dark">完了</button>
                         </form>
 
@@ -377,7 +378,7 @@
 
     {{-- アウトプットを表示するエリア --}}
     <section class="container">
-        アウトプット一覧
+        <div class="mt-2 mb-1">アウトプット一覧</div>
         {{-- データがDBにない場合の表示内 --}}
         @if ($tasks->isEmpty())
             <article>
@@ -441,7 +442,7 @@
                     @if ($task->memo)
                         <div class="toggle-form toggle_memo">
                             <p class="display_toggle">{{ $task->memo }}</p>
-                            <button class="edit_memo display_toggle btn btn-outline-dark fs-6"
+                            <button class="edit_memo display_toggle btn btn-outline-dark btn-sm"
                                 data-mdb-ripple-color="dark">メモを編集</button>
 
                             <form class="hide display_toggle2" method="post"
@@ -453,7 +454,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm"
                                     data-mdb-ripple-color="dark">編集完了</button>
                             </form>
                         </div>
@@ -467,7 +468,7 @@
                                     <div>{{ $message }}</div>
                                 @enderror
                                 <textarea name="memo">{{ old('memo') ?: $task->memo }}</textarea>
-                                <button type="submit" class="btn btn-outline-dark fs-6"
+                                <button type="submit" class="btn btn-outline-dark btn-sm"
                                     data-mdb-ripple-color="dark">メモを追加</button>
                             </form>
                         </div>
@@ -528,7 +529,7 @@
                             <input type="hidden" name="task_id" value="{{ $task->id }}">
                             <input type="hidden" name="is_done" value="1">
                             <textarea name="content">{{ old('title') }}</textarea><br>
-                            <button type="submit" class="btn btn-outline-dark fs-6"
+                            <button type="submit" class="btn btn-outline-dark btn-sm"
                                 data-mdb-ripple-color="dark">完了</button>
                         </form>
 

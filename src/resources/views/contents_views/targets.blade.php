@@ -177,7 +177,7 @@
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="is_done" value="2">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-sm" style="border: none;">
                                     <span class="material-symbols-outlined">
                                         check_box
                                     </span>
@@ -188,7 +188,7 @@
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="is_done" value="1">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-sm" style="border: none;">
                                     <span class="material-symbols-outlined">
                                         check_box_outline_blank
                                     </span>

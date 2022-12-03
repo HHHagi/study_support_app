@@ -71,8 +71,8 @@
                                         <input type="hidden" name="user_id" value="{{ $user_id }}">
                                         <input type="hidden" name="target_id" value="{{ $target->id }}">
 
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">
-                                            <span class="material-symbols-outlined"
+                                        <button type="submit" class="btn btn-sm like-button" style="border: none;">
+                                            <span class="material-symbols-outlined like-icon"
                                                 style=" font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48">
                                                 favorite
                                             </span>
@@ -83,7 +83,7 @@
                                         @csrf
                                         <input type="hidden" name="user_id" value="{{ $user_id }}">
                                         <input type="hidden" name="target_id" value="{{ $target->id }}">
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                                        <button type="submit" class="btn btn-sm" style="border: none;">
                                             <span class="material-symbols-outlined">
                                                 favorite
                                             </span>

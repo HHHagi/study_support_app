@@ -29,7 +29,7 @@
                         <li>{{ $message }}</li>
                     @enderror
                     <input name="category">
-                    <button type="submit" class="btn btn-outline-dark fs-7" data-mdb-ripple-color="dark">作成</button>
+                    <button type="submit" class="btn btn-outline-dark bnt-sm button-new-category" data-mdb-ripple-color="dark">作成</button>
                 </form>
             </div>
         @endif
@@ -43,7 +43,7 @@
                         <li>{{ $message }}</li>
                     @enderror
                     <input name="category">
-                    <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">作成</button>
+                    <button type="submit" class="btn btn-outline-dark btn-sm button-new-category" data-mdb-ripple-color="dark">作成</button>
                 </form>
             </div>
         @endif

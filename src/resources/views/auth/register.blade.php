@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <div class="row pb-3">
             <div class="mx-auto col col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
                 <h1 class="text-center">Study Helper</h1>
                 <div class="card mt-3">
                     <div class="card-body text-center">
-                        <h2 class="h3 card-title text-center mt-2">ユーザー登録</h2>
+                        <h2 class="h3 card-title text-center">ユーザー登録</h2>
                         @include('error_card_list')
                         <div class="card-text">
                             {{-- ここから --}}
@@ -34,7 +34,7 @@
                                         name="password_confirmation" required placeholder="パスワード（確認）">
                                     <label for="floatingInput">パスワード(確認)</label>
                                 </div>
-                                <button class="w-100 btn btn-lg btn-primary button-login" type="submit">ユーザー登録</button>
+                                <button class="w-100 btn btn-lg btn-primary button-login" type="submit">登録</button>
                             </form>
                             {{-- ここまで --}}
 

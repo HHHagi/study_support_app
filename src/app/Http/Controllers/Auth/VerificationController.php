@@ -38,6 +38,5 @@ class VerificationController extends Controller
         $this->middleware('auth');
         // $this->middleware('signed')->only('verify');
         // $this->middleware('throttle:6,1')->only('verify', 'resend');
-        // メール認証を外すため、上記をコメントアウト
     }
 }

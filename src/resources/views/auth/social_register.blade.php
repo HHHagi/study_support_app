@@ -11,12 +11,11 @@
                         @include('error_card_list')
                         <div class="card-text">
                             {{-- ここから --}}
-                            <form method="POST" action="{{ route('register') }}">
+                            <form method="POST" action="{{ route('register.{provider}', ['provider' => $provider]) }}">
                                 @csrf
-                                <a href="{{ route('login.{provider}', ['provider' => 'google']) }}"
-                                    class="btn btn-block btn-danger">
-                                    <i class="fab fa-google mr-1"></i>Googleで登録
-                                </a>
+
+                                <input type="hidden" name="token" value="{{ $token }}">
+
                                 <div class="form-floating">
                                     <input class="form-control" type="text" id="name" name="name" required
                                         value="{{ old('name') }}" placeholder="ユーザー名">
@@ -24,11 +23,14 @@
                                     {{-- <small>英数字3〜16文字(登録後の変更はできません)</small> --}}
                                 </div>
                                 <div class="form-floating">
-                                    <input class="form-control" type="text" id="email" name="email" required
+                                    {{-- <input class="form-control" type="text" id="email" name="email" required
                                         value="{{ old('email') }}" placeholder="メールアドレス">
-                                    <label for="floatingInput">メールアドレス</label>
+                                    <label for="floatingInput">メールアドレス</label> --}}
+                                    <label for="email">メールアドレス</label>
+                                    <input class="form-control" type="text" id="email" name="email"
+                                        value="{{ $email }}" disabled>
                                 </div>
-                                <div class="form-floating">
+                                {{-- <div class="form-floating">
                                     <input class="form-control" type="password" id="password" name="password" required
                                         placeholder="パスワード">
                                     <label for="floatingInput">パスワード</label>
@@ -37,7 +39,7 @@
                                     <input class="form-control" type="password" id="password_confirmation"
                                         name="password_confirmation" required placeholder="パスワード（確認）">
                                     <label for="floatingInput">パスワード(確認)</label>
-                                </div>
+                                </div> --}}
                                 <button class="w-100 btn btn-lg btn-primary button-login" type="submit">登録</button>
                             </form>
                             {{-- ここまで --}}

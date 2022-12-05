@@ -16,6 +16,16 @@ use Illuminate\Support\Facades\Auth;
 // Auth::routes();
 Auth::routes(['verify' => true]);
 
+// Googleログインのためのルーティング
+Route::prefix('login')->name('login.')->group(function () {
+    Route::get('/{provider}', 'App\Http\Controllers\Auth\LoginController@redirectToProvider')->name('{provider}');
+    Route::get('/{provider}/callback', 'App\Http\Controllers\Auth\LoginController@handleProviderCallback')->name('{provider}.callback');
+});
+Route::prefix('register')->name('register.')->group(function () {
+    Route::get('/{provider}', 'App\Http\Controllers\Auth\RegisterController@showProviderUserRegistrationForm')->name('{provider}');
+    Route::post('/{provider}', 'App\Http\Controllers\Auth\RegisterController@registerProviderUser')->name('{provider}');
+});
+
 Route::get('/', function () {
     return view('auth.register');
 });
@@ -25,7 +35,7 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Route::middleware(['verified'])->group(function (){
-    
+
 Route::get('/our_targets', [App\Http\Controllers\OurTargetController::class, 'index'])->middleware('throttle:10, 1');
 
 Route::resource('targets', 'App\Http\Controllers\TargetController', ['only' => ['index', 'create', 'store', 'edit', 'destroy', 'update']])->middleware('throttle:10, 1')->middleware('auth');

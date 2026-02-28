@@ -32,18 +32,18 @@ class OurTargetController extends Controller
         $users = User::all();
         $PAGE_NUMBER = 5;
         $public_categories = PublicCategory::all();
-        // dd($request->public_category_id);
-        if ($request->public_category_id) {
-            if ($request->public_category_id == 1) {
-                $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
-        $request->session()->regenerateToken();
-                return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
-            }
-            $targets = Target::where('is_private', "1")->with('likes')->where('public_category_id', $request->public_category_id)->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
-        $request->session()->regenerateToken();
-            return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
+
+        $query = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc');
+
+        if ($request->target_title) {
+            $query->where('title', 'LIKE', '%' . $request->target_title . '%');
         }
-        $targets = Target::where('is_private', "1")->with('likes')->orderBy('id', 'desc')->paginate($PAGE_NUMBER, ['*'], 'targetPage');
+
+        if ($request->public_category_id && $request->public_category_id != 1) {
+            $query->where('public_category_id', $request->public_category_id);
+        }
+
+        $targets = $query->paginate($PAGE_NUMBER, ['*'], 'targetPage');
         return view('contents_views.our_targets', compact('user_id', 'users', 'targets', 'public_categories'));
     }
 

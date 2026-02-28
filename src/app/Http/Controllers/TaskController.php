@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Task;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -36,6 +37,10 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|max:200',
+            'priority' => 'required|in:1,2,3',
+        ]);
         $tasks = new Task;
         $form  = $request->all();
         $tasks->fill($form);
@@ -74,7 +79,11 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $task = Task::find($id);
+        $request->validate([
+            'title' => 'sometimes|required|max:200',
+            'priority' => 'sometimes|required|in:1,2,3',
+        ]);
+        $task = Task::whereHas('targets', fn($q) => $q->where('user_id', Auth::id()))->findOrFail($id);
         $form  = $request->all();
         $task->update($form);
         return back();
@@ -88,7 +97,7 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        $task = Task::find($id);
+        $task = Task::whereHas('targets', fn($q) => $q->where('user_id', Auth::id()))->findOrFail($id);
         $task->delete();
         return back();
     }

@@ -24,7 +24,7 @@ class UpdateIdeaRequest extends FormRequest
     public function rules()
     {
         return [
-            'idea' => 'required|string',
+            'idea' => 'required|string|max:1000',
         ];
     }
 
@@ -33,6 +33,7 @@ class UpdateIdeaRequest extends FormRequest
         return [
             'idea.required' => '考察を入力してください。',
             'idea.string' => '考察は文字列で入力してください。',
+            'idea.max' => '考察は1000文字以内で入力してください。',
         ];
     }
 }

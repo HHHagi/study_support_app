@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\TaskExplanation;
 use App\Models\Task;
+use App\Models\Target;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskExplanationController extends Controller
 {
@@ -36,13 +38,16 @@ class TaskExplanationController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'content' => 'required|max:2000',
+        ]);
         $task_explanations = new TaskExplanation;
-        $task = Task::find($request->task_id);
-        $task->is_done  = '1'; 
+        $task = Task::findOrFail($request->task_id);
+        $task->is_done  = '1';
         $form  = $request->all();
         $task_explanations->fill($form);
         $task_explanations->save();
-        $task->update();
+        $task->save();
         return back();
     }
 
@@ -77,7 +82,11 @@ class TaskExplanationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $task_explanation = TaskExplanation::find($id);
+        $request->validate([
+            'content' => 'required|max:2000',
+        ]);
+        $task_explanation = TaskExplanation::findOrFail($id);
+        Target::where('id', $task_explanation->target_id)->where('user_id', Auth::id())->firstOrFail();
         $form  = $request->all();
         $task_explanation->update($form);
         return back();
@@ -91,18 +100,20 @@ class TaskExplanationController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        $task_explanation = TaskExplanation::find($id);
+        $task_explanation = TaskExplanation::findOrFail($id);
+        Target::where('id', $task_explanation->target_id)->where('user_id', Auth::id())->firstOrFail();
+        $task_id = $task_explanation->task_id;
         $task_explanation->delete();
-        // taskexplanationがゼロになったら、taskのis_doneをゼロにする処理をかく
-        // $task_id = $request->task_id;
-        // $task_explanation =  TaskExplanation::find($task_id);
-        // if(!$task_explanation){
-        //     $task = Task::find($task_id);
-        //     $task->is_done  = '1';
-        //     $task->update();
-        // }
+
+        // TaskExplanationが0件になったらTaskのis_doneを'2'にリセット
+        if (TaskExplanation::where('task_id', $task_id)->count() === 0) {
+            $task = Task::find($task_id);
+            if ($task) {
+                $task->is_done = '2';
+                $task->save();
+            }
+        }
+
         return back();
-        // 実行したら、http://localhost:8080/task_explanations/6へなぜか飛ばされた
-        //　引数の名前は$idにしないといけない。task_explanation_idにしたら上記が起きた。メモに残しておくこと。
     }
 }

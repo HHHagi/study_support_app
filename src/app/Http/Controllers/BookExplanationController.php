@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookExplanation;
+use App\Models\Target;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookExplanationController extends Controller
 {
@@ -35,6 +37,9 @@ class BookExplanationController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'content' => 'required|max:2000',
+        ]);
         $book_explanations = new BookExplanation;
         $form  = $request->all();
         $book_explanations->fill($form);
@@ -73,7 +78,11 @@ class BookExplanationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $book_explanation = BookExplanation::find($id);
+        $request->validate([
+            'content' => 'required|max:2000',
+        ]);
+        $book_explanation = BookExplanation::findOrFail($id);
+        Target::where('id', $book_explanation->target_id)->where('user_id', Auth::id())->firstOrFail();
         $form  = $request->all();
         $book_explanation->update($form);
         return back();
@@ -87,8 +96,9 @@ class BookExplanationController extends Controller
      */
     public function destroy($id)
     {
-        $book = BookExplanation::find($id);
-        $book->delete();
+        $book_explanation = BookExplanation::findOrFail($id);
+        Target::where('id', $book_explanation->target_id)->where('user_id', Auth::id())->firstOrFail();
+        $book_explanation->delete();
         return back();
     }
 }

@@ -80,10 +80,10 @@ class IdeaController extends Controller
      */
     public function update(UpdateIdeaRequest $request, $id)
     {
-        $idea = Idea::find($id);
+        $idea = Idea::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $form  = $request->all();
         $idea->update($form);
-        return back(); 
+        return back();
     }
 
     /**
@@ -94,8 +94,8 @@ class IdeaController extends Controller
      */
     public function destroy($id)
     {
-        $idea = Idea::find($id);
-        $idea->delete(); 
-        return redirect('/targets'); 
+        $idea = Idea::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $idea->delete();
+        return redirect('/targets');
     }
 }

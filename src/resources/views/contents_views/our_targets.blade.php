@@ -3,12 +3,11 @@
 
 @section('content')
     <section class="container">
-        <button type="button" onclick="location.href='{{ route('targets.index') }}' " class="btn btn-outline-dark fs-6 mt-2"
-            data-mdb-ripple-color="dark">自分の目標一覧</button>
-        <button type="button" onclick="location.href='{{ route('our_targets.index') }}' "
-            class="btn btn-outline-dark fs-6 mt-2" data-mdb-ripple-color="dark">すべてを表示</button>
-        <button type="button" class="toggle_sort_form btn btn-outline-dark fs-6 mt-2"
-            data-mdb-ripple-color="dark">ソート</button><br>
+        <button type="button" onclick="location.href='{{ route('targets.index') }}'"
+            class="btn btn-outline-secondary btn-sm">← 自分の目標一覧</button>
+        <button type="button" onclick="location.href='{{ route('our_targets.index') }}'"
+            class="btn btn-outline-secondary btn-sm">すべてを表示</button>
+        <button type="button" class="toggle_sort_form btn btn-light btn-sm">☰ ソート</button><br>
 
 
 
@@ -20,21 +19,21 @@
                     <select name="public_category_id" class="sort_public_category">
                         <option value="" selected>公式カテゴリを選択</option>
                         @foreach ($public_categories as $public_category)
-                            <option value={{ $public_category->id }}>{{ $public_category->category }} </option>
+                            <option value="{{ $public_category->id }}">{{ $public_category->category }} </option>
                         @endforeach
                     </select>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">ソートを完了</button>
+                <button type="submit" class="btn btn-primary btn-sm">ソートを完了</button>
             </form>
         </div>
 
         <div class="serch-box">
-            <form method="GET" action="{{ route('our_targets.edit', 1) }}">
+            <form method="GET" action="{{ route('our_targets.index') }}">
                 <div class="mb-3">
                     <label for="target-serch" class="form-label">目標を検索</label>
-                    <textarea type="text" name="target_title" class="target-search-input" id="target-serch"></textarea>
-                    <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">検索を実行</button>
+                    <input type="text" name="target_title" class="target-search-input" id="target-serch">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm button-search">検索を実行</button>
                 </div>
             </form>
         </div>

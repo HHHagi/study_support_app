@@ -5,11 +5,10 @@
     <section class="container mb-4">
         <h3 class="h3-css">目標：{{ $target->title }}</h3>
         <div class="mb-2">
-            <button type="button" onclick="location.href='{{ route('our_targets.index') }}' "
-                class="btn btn-outline-dark fs-6" data-mdb-ripple-color="dark">みんなの目標へ戻る</button>
+            <button type="button" onclick="location.href='{{ route('our_targets.index') }}'"
+                class="btn btn-outline-secondary btn-sm">← みんなの目標へ戻る</button>
             @if ($target->user_id !== $user_id)
-                <button type="button" class="toggle_sort_form_copy btn btn-outline-dark fs-6"
-                    data-mdb-ripple-color="dark">自分の目標へコピーする </button>
+                <button type="button" class="toggle_sort_form_copy btn btn-primary btn-sm">自分の目標へコピーする</button>
             @endif
         </div>
         {{-- 目標コピーフォーム --}}
@@ -26,7 +25,7 @@
                 @enderror
                 <select name="private_category_id">
                     @foreach ($private_categories as $private_category)
-                        <option value={{ $private_category->id }}>{{ $private_category->category }} </option>
+                        <option value="{{ $private_category->id }}">{{ $private_category->category }}</option>
                     @endforeach
                 </select><br>
                 <label>目標期限</label>
@@ -36,7 +35,7 @@
                 <input name="limit" type="date">
                 <input type="hidden" name="is_private" value="0">
                 <input type="hidden" name="is_done" value="2">
-                <button type="submit" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">コピーを実行</button>
+                <button type="submit" class="btn btn-primary btn-sm">コピーを実行</button>
             </form>
         </div>
     </section>

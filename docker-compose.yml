@@ -1,6 +1,3 @@
-# versionはComposeファイルのバージョンでありDocker Compose自体のバージョンとは異なることに注意
-version: '3.9'
-
 volumes:
   mysql-volume:
 
@@ -34,6 +31,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/db/Dockerfile
+    user: mysql
     # ローカルのポート番号(MySQLのデフォルトのポート番号は3306)
     ports:
       - 3306:3306

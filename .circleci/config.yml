@@ -1,76 +1,106 @@
 version: 2.1
+
+# =====================================================================
+# CircleCI 設定ファイル
+#
+# 役割: git push のたびに自動でテストを実行し、コードが壊れていないか確認する
+# 対象ブランチ: main（すべてのプッシュでテストが走る）
+# =====================================================================
+
 jobs:
+  # -------------------------------------------------------------------
+  # build ジョブ: テストを実行する一連の手順
+  # -------------------------------------------------------------------
   build:
     docker:
-      - image: circleci/php:8.0-node-browsers
+      # 修正①: 旧イメージ(circleci/php:8.0-node-browsers)は 2024年1月に削除済み
+      # → cimg/php:8.1-node に変更
+      # cimg/php:8.1-node には PHP・Composer・Node.js・npm がすべて含まれている
+      # ※ cimg/php:8.1（node なし）では npm が使えないため -node バリアントを使う
+      - image: cimg/php:8.1-node
+
     steps:
+      # リポジトリのコードを CI サーバーにダウンロードする
       - checkout
+
+      # ------- .env ファイルのセットアップ（前半）-------
+      # Laravel は .env ファイルを必要とする
+      # .env は git 管理外なので、テンプレートからコピーする
+      # ※ php artisan key:generate は composer install の後で実行する
       - run:
-          name: composer-update
-          working_directory: src 
-          command: sudo composer self-update
-      - restore_cache:
+          name: Setup .env
           working_directory: src
-          key: composer-v1-{{ checksum "composer.lock" }}
-      - run: 
-          name: composer-install
-          working_directory: src 
+          command: cp .env.example .env
+
+      # ------- Composer（PHP パッケージ管理）-------
+      # キャッシュを使って 2回目以降のビルドを高速化する
+      # checksum はロックファイルのハッシュ値。依存関係が変わったときだけキャッシュを再作成する
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "src/composer.lock" }}
+            - composer-v1-  # ← ロックファイルが変わったときの fallback
+
+      - run:
+          name: composer install
+          working_directory: src
+          # 修正②: sudo composer self-update を削除
+          # CI 環境でバージョンを変えるのはアンチパターン。cimg/ イメージには安定版が含まれている
           command: composer install -n --prefer-dist
+
       - save_cache:
-          working_directory: src
-          key: composer-v1-{{ checksum "composer.lock" }}
+          # 修正③: キャッシュキーのパスを src/ から正しく指定
+          # 以前は working_directory をキャッシュステップに書いていたが、それは無効な設定
+          # checksum のパスはリポジトリルートからの相対パスで書く必要がある
+          key: composer-v1-{{ checksum "src/composer.lock" }}
           paths:
-            - vendor
-      - restore_cache:
+            - src/vendor
+
+      # ------- .env ファイルのセットアップ（後半）-------
+      # vendor/autoload.php が存在する状態で artisan を実行する必要があるため
+      # composer install の後で key:generate を実行する
+      - run:
+          name: Generate app key
           working_directory: src
-          key: npm-v1-{{ checksum "package-lock.json" }}
+          command: php artisan key:generate
+
+      # ------- npm（JavaScript パッケージ管理）-------
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "src/package-lock.json" }}
+            - npm-v1-
+
       - run:
           name: npm ci
           working_directory: src
-          command: |
-            if [ ! -d node_modules ]; then
-              npm ci
-            fi 
+          command: npm ci
+
       - save_cache:
-          working_directory: src
-          key: npm-v1-{{ checksum "package-lock.json" }}
+          key: npm-v1-{{ checksum "src/package-lock.json" }}
           paths:
-            - node_modules
+            - src/node_modules
+
+      # Blade テンプレートが mix() ヘルパーを使っているため、
+      # mix-manifest.json が存在しないとビューのテストが失敗する
+      # → アセットをビルドして manifest を生成する
       - run:
-          name: npm-run-dev 
+          name: npm run dev (asset build)
           working_directory: src
           command: npm run dev
+
+      # ------- PHPUnit テストの実行 -------
+      # phpunit.xml の設定により SQLite インメモリ DB でテストが動く（MySQL 不要）
       - run:
           name: php test
           working_directory: src
           command: vendor/bin/phpunit
 
-  deploy:
-    docker:
-      - image: circleci/php:8.0-node-browsers
-    steps:
-      - add_ssh_keys
-      - run:
-          name: deploy
-          working_directory: src
-          command: |
-            ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd /home/webapp/study_support_app/src && \
-              git pull origin main && \
-              composer install -n --no-dev --prefer-dist --ignore-platform-reqs && \
-              npm ci && \
-              npm run prod && \
-              php artisan migrate --force && \
-              php artisan config:cache"
-
+# =====================================================================
+# workflows: ジョブをいつ・どの順番で実行するかを定義する
+# =====================================================================
 workflows:
   version: 2
-  build_deploy:
+  # 修正④: deploy ジョブを削除し、build（テスト）のみに絞る
+  # deploy ジョブはサーバーへの SSH デプロイだったが、今回は不要
+  build:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - main

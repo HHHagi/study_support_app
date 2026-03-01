@@ -22,15 +22,14 @@ jobs:
       # リポジトリのコードを CI サーバーにダウンロードする
       - checkout
 
-      # ------- .env ファイルのセットアップ -------
-      # Laravel は起動時に .env ファイルを必要とする
-      # .env は git 管理外なので、テンプレートから作成してアプリキーを生成する
+      # ------- .env ファイルのセットアップ（前半）-------
+      # Laravel は .env ファイルを必要とする
+      # .env は git 管理外なので、テンプレートからコピーする
+      # ※ php artisan key:generate は composer install の後で実行する
       - run:
           name: Setup .env
           working_directory: src
-          command: |
-            cp .env.example .env
-            php artisan key:generate
+          command: cp .env.example .env
 
       # ------- Composer（PHP パッケージ管理）-------
       # キャッシュを使って 2回目以降のビルドを高速化する
@@ -54,6 +53,14 @@ jobs:
           key: composer-v1-{{ checksum "src/composer.lock" }}
           paths:
             - src/vendor
+
+      # ------- .env ファイルのセットアップ（後半）-------
+      # vendor/autoload.php が存在する状態で artisan を実行する必要があるため
+      # composer install の後で key:generate を実行する
+      - run:
+          name: Generate app key
+          working_directory: src
+          command: php artisan key:generate
 
       # ------- npm（JavaScript パッケージ管理）-------
       - restore_cache:
